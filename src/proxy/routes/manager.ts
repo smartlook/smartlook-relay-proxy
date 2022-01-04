@@ -45,7 +45,6 @@ const handler = async (
 
 		res.writeHead(statusCode, headers)
 		body.pipe(res)
-		res.end()
 	}
 }
 
