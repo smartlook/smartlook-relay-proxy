@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+    proxy:
+        container_name: proxy
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: base
+        command: npm run dev
+        volumes:
+            - ./src:/home/node/app/src:ro
+        ports:
+            - 80:9000
+        environment:
+            NODE_ENV: development
+            PROXY_PORT: 9000
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
+        depends_on:
+            - redis
+
+    redis:
+        container_name: redis
+        image: redis:6
+        ports:
+            - 6379:6379
+
+    redis-commander:
+        container_name: redis-commander
+        image: rediscommander/redis-commander:latest
+        ports:
+            - 81:8081
+        environment:
+            - REDIS_HOSTS=local:redis:6379
+        depends_on:
+            - redis
