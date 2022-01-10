@@ -5,8 +5,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-            target: base
-        command: npm run dev
+            target: dev
         volumes:
             - ./src:/home/node/app/src:ro
         ports:
@@ -27,11 +26,11 @@ services:
             - 6379:6379
 
     redis-commander:
-        container_name: redis-commander
+        container_name: smartlook_relay_proxy_redis_commander
         image: rediscommander/redis-commander:latest
         ports:
             - 81:8081
         environment:
-            - REDIS_HOSTS=local:redis:6379
+            REDIS_HOSTS: local:redis:6379
         depends_on:
             - redis
