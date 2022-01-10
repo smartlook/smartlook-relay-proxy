@@ -9,7 +9,7 @@ export const handler = async (
 	req: IncomingMessage,
 	res: ServerResponse
 ): Promise<void> => {
-	const url = `${config.get('proxy.hosts.webSDK')}${req.url as string}`
+	const url = `${config.get('proxy.hosts.webSdk')}${req.url as string}`
 
 	const cached = await getCachedResponse(url)
 

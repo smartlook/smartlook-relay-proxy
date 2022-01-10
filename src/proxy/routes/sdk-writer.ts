@@ -9,7 +9,7 @@ export const handler = async (
 	req: IncomingMessage,
 	res: ServerResponse
 ): Promise<void> => {
-	const url = `${config.get('proxy.hosts.mobileSDK')}/${stripUrl(
+	const url = `${config.get('proxy.hosts.mobileSdk')}/${stripUrl(
 		req.url as string,
 		routes.sdkWriter
 	)}`

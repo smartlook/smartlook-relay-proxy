@@ -15,7 +15,7 @@ export const config = convict({
 			default: 9000,
 		},
 		hosts: {
-			webSDK: {
+			webSdk: {
 				doc: 'Web SDK host',
 				format: String,
 				env: 'WEB_SDK_HOST',
@@ -33,7 +33,7 @@ export const config = convict({
 				env: 'WEB_WRITER_HOST',
 				default: 'https://web-writer.eu.smartlook.cloud',
 			},
-			mobileSDK: {
+			mobileSdk: {
 				doc: 'Mobile SDK host',
 				format: String,
 				env: 'MOBILE_SDK_HOST',

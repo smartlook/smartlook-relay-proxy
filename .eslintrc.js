@@ -1,10 +1,10 @@
 module.exports = {
 	env: {
-		es2020: true,
+		es2021: true,
 		node: true,
 	},
 	parserOptions: {
-		ecmaVersion: 2020,
+		ecmaVersion: 2021,
 		sourceType: 'module',
 		project: './tsconfig.json',
 		ecmaFeatures: {

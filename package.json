@@ -8,6 +8,7 @@
 		"node": ">=16.0.0"
 	},
 	"scripts": {
+		"lint": "eslint ./src --ext .ts",
 		"dev": "tsc-watch --onSuccess \"node build/index.js\" | pino-pretty",
 		"build": "tsc",
 		"prod": "node build/index.js"

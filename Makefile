@@ -10,7 +10,7 @@ help:
 # clean: Remove all local build files & clean node_modules
 clean:
 	@echo "Cleaning build..."
-	rm -r ./build; rm -r ./node_modules;
+	rm -rf ./build; rm -rf ./node_modules;
 
 # up-dev: Start dev server in Docker
 up-dev:

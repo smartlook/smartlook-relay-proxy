@@ -17,11 +17,11 @@ export const handler = async (
 	}
 
 	// web-sdk
-	if (req.url === routes.webSdk.recorder && req.method === 'GET') {
-		await webSdkHandler(req, res)
-		return
-	}
-	if (req.url.startsWith(routes.webSdk.es6) && req.method === 'GET') {
+	if (
+		(req.url === routes.webSdk.recorder ||
+			req.url.startsWith(routes.webSdk.es6)) &&
+		req.method === 'GET'
+	) {
 		await webSdkHandler(req, res)
 		return
 	}
