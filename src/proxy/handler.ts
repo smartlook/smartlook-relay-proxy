@@ -16,6 +16,20 @@ export const handler = async (
 		return
 	}
 
+	// status
+	if (req.url === '/status') {
+		res.writeHead(200, {
+			'Content-Type': 'application/json',
+		})
+		res.write(
+			JSON.stringify({
+				status: 'ok',
+			})
+		)
+		res.end()
+		return
+	}
+
 	// web-sdk
 	if (
 		(req.url === routes.webSdk.recorder ||

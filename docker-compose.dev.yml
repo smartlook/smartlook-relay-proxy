@@ -1,7 +1,7 @@
 version: '3.9'
 services:
     proxy:
-        container_name: proxy
+        container_name: smartlook_relay_proxy
         build:
             context: .
             dockerfile: Dockerfile
@@ -16,11 +16,12 @@ services:
             PROXY_PORT: 9000
             REDIS_HOST: redis
             REDIS_PORT: 6379
+            REDIS_CACHE_EXPIRY_SECONDS: 600
         depends_on:
             - redis
 
     redis:
-        container_name: redis
+        container_name: smartlook_relay_proxy_redis
         image: redis:6
         ports:
             - 6379:6379

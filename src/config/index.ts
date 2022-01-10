@@ -52,13 +52,19 @@ export const config = convict({
 			doc: 'Redis host',
 			format: String,
 			env: 'REDIS_HOST',
-			default: 'redis',
+			default: null,
 		},
 		port: {
 			doc: 'Redis port',
 			format: Number,
 			env: 'REDIS_PORT',
-			default: 6379,
+			default: null,
+		},
+		defaultExpiry: {
+			doc: 'Redis cache expiry',
+			format: Number,
+			env: 'REDIS_CACHE_EXPIRY_SECONDS',
+			default: 600,
 		},
 	},
 })

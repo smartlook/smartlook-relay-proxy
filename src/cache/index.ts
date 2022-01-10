@@ -3,15 +3,26 @@ import { IncomingHttpHeaders } from 'http'
 import RedisClient, { ValueType } from 'ioredis'
 
 import { config } from '../config'
+import { logger } from '../logger'
 
 import { IGetCacheData, ISetCacheData, TCachedResponse } from './types'
 
-const redis = new RedisClient({
-	host: config.get('redis.host'),
-	port: config.get('redis.port'),
-})
+export let CACHE_CONFIGURED = false
 
-const defaultExpiry = 10 * 60 // 10 min
+const host: string | null = config.get('redis.host')
+const port: number | null = config.get('redis.port')
+const defaultExpiry = config.get('redis.defaultExpiry')
+
+let redis: RedisClient.Redis
+
+if (host && port) {
+	redis = new RedisClient({
+		host,
+		port,
+	})
+	CACHE_CONFIGURED = true
+	logger.info('Redis has been initialized')
+}
 
 const set = async (data: ISetCacheData[]): Promise<Array<'OK' | null>> => {
 	return Promise.all(
@@ -87,5 +98,5 @@ export const getCachedResponse = async (
 		return null
 	}
 
-	return data
+	return data as TCachedResponse[]
 }

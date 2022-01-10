@@ -1,5 +1,5 @@
 {
-	"name": "relay",
+	"name": "smartlook-relay-proxy",
 	"description": "Smartlook Relay ⚡️",
 	"license": "MIT",
 	"version": "1.0.0",
@@ -13,13 +13,13 @@
 		"build": "tsc",
 		"prod": "node build/index.js"
 	},
-	"homepage": "https://github.com/smartlook/relay#readme",
+	"homepage": "https://github.com/smartlook/smartlook-relay-proxy#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/smartlook/relay.git"
+		"url": "git+https://github.com/smartlook/smartlook-relay-proxy.git"
 	},
 	"bugs": {
-		"url": "https://github.com/smartlook/relay/issues"
+		"url": "https://github.com/smartlook/smartlook-relay-proxy/issues"
 	},
 	"dependencies": {
 		"convict": "^6.2.1",
