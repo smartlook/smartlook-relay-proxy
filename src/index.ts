@@ -1,7 +1,12 @@
-import { bootstrap } from './bootstrap'
+import { config } from './config'
+import { logger } from './logger'
+import { initApp } from './proxy'
 
 const start = (): void => {
-	bootstrap()
+	const app = initApp()
+
+	app.listen(config.get('proxy.port'))
+	logger.info('Proxy started')
 }
 
 start()

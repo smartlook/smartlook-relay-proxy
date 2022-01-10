@@ -1,10 +1,11 @@
 import { IncomingMessage, ServerResponse } from 'http'
-import config from '../../config'
+
+import { config } from '../../config'
 import { routes } from '../constants'
 import { get, post } from '../request'
 import { getBodyAsBuffer, stripUrl } from '../utils'
 
-const handler = async (
+export const handler = async (
 	req: IncomingMessage,
 	res: ServerResponse
 ): Promise<void> => {
@@ -47,5 +48,3 @@ const handler = async (
 		body.pipe(res)
 	}
 }
-
-export default handler

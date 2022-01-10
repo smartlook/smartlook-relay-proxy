@@ -1,5 +1,7 @@
 import { request } from 'undici'
-import config from '../../config'
+
+import { config } from '../../config'
+
 import {
 	IGetRequest,
 	IPostRequest,

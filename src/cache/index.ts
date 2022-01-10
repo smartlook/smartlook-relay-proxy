@@ -1,6 +1,9 @@
 import { IncomingHttpHeaders } from 'http'
+
 import RedisClient, { ValueType } from 'ioredis'
-import config from '../config'
+
+import { config } from '../config'
+
 import { IGetCacheData, ISetCacheData, TCachedResponse } from './types'
 
 const redis = new RedisClient({

@@ -1,16 +1,17 @@
 import { IncomingMessage, ServerResponse } from 'http'
-import config from '../../config'
+
+import { config } from '../../config'
 import { routes } from '../constants'
 import { post } from '../request'
 import { getBodyAsBuffer, stripUrl } from '../utils'
 
-const handler = async (
+export const handler = async (
 	req: IncomingMessage,
 	res: ServerResponse
 ): Promise<void> => {
-	const url = `${config.get('proxy.hosts.mobileSDK')}/${stripUrl(
+	const url = `${config.get('proxy.hosts.assetsProxy')}/${stripUrl(
 		req.url as string,
-		routes.sdkWriter
+		routes.assetsProxy
 	)}`
 
 	const requestBody = await getBodyAsBuffer(req)
@@ -27,5 +28,3 @@ const handler = async (
 	res.writeHead(statusCode, headers)
 	body.pipe(res)
 }
-
-export default handler

@@ -1,10 +1,11 @@
 import { IncomingMessage, OutgoingHttpHeaders, ServerResponse } from 'http'
+
 import { cacheResponse, getCachedResponse } from '../../cache'
-import config from '../../config'
-import logger from '../../logger'
+import { config } from '../../config'
+import { logger } from '../../logger'
 import { get } from '../request'
 
-const handler = async (
+export const handler = async (
 	req: IncomingMessage,
 	res: ServerResponse
 ): Promise<void> => {
@@ -37,5 +38,3 @@ const handler = async (
 	res.write(body)
 	res.end()
 }
-
-export default handler

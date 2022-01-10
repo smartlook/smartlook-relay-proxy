@@ -1,12 +1,13 @@
 import { IncomingMessage, ServerResponse } from 'http'
-import { routes } from './constants'
-import webSdkHandler from './routes/webSdk'
-import assetsProxyHandler from './routes/assetsProxy'
-import webWriterHandler from './routes/webWriter'
-import sdkWriterHandler from './routes/sdkWriter'
-import managerHandler from './routes/manager'
 
-const handler = async (
+import { routes } from './constants'
+import { handler as assetsProxyHandler } from './routes/assets-proxy'
+import { handler as managerHandler } from './routes/manager'
+import { handler as sdkWriterHandler } from './routes/sdk-writer'
+import { handler as webSdkHandler } from './routes/web-sdk'
+import { handler as webWriterHandler } from './routes/web-writer'
+
+export const handler = async (
 	req: IncomingMessage,
 	res: ServerResponse
 ): Promise<void> => {
@@ -64,5 +65,3 @@ const handler = async (
 	)
 	res.end()
 }
-
-export default handler
