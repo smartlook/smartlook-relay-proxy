@@ -2,8 +2,6 @@ import { IncomingHttpHeaders } from 'http'
 
 import { request } from 'undici'
 
-import { config } from '../../config'
-
 import {
 	IGetRequest,
 	IPostRequest,
@@ -18,7 +16,7 @@ const prepareHeaders = (
 		...originalHeaders,
 		'X-Forwarded-Host': originalHeaders.host,
 		// Next line bypasses: [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames.
-		...(config.get('env') === 'development' && { host: '' }),
+		host: '',
 	}
 }
 
