@@ -1,6 +1,6 @@
 # Smartlook Relay Proxy
 
-This service allows you to proxy requests from your domain/subdomain to
+This service relays HTTP requests from your domain/subdomain to
 Smartlook's recording domains, allowing you to bypass Ad blockers used
 by your visitors.
 
