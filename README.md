@@ -30,6 +30,8 @@ make build
 make up port=<number>
 ```
 
+You should then point your domain/subdomain to specified port using a reverse proxy of your choice.
+
 ## Development
 
 ```sh
