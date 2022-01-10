@@ -5,7 +5,7 @@ import RedisClient, { ValueType } from 'ioredis'
 import { config } from '../config'
 import { logger } from '../logger'
 
-import { IGetCacheData, ISetCacheData, TCachedResponse } from './types'
+import { ICachedResponse, IGetCacheData, ISetCacheData } from './types'
 
 export let CACHE_CONFIGURED = false
 
@@ -75,7 +75,7 @@ export const cacheResponse = async (
 
 export const getCachedResponse = async (
 	url: string
-): Promise<TCachedResponse[] | null> => {
+): Promise<ICachedResponse | null> => {
 	const values = await Promise.all([
 		get([
 			{
@@ -98,5 +98,10 @@ export const getCachedResponse = async (
 		return null
 	}
 
-	return data as TCachedResponse[]
+	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+	return {
+		status: data[0],
+		headers: data[1],
+		body: data[2],
+	} as ICachedResponse
 }

@@ -9,4 +9,10 @@ export interface ISetCacheData extends IGetCacheData {
 	expiry: number
 }
 
-export type TCachedResponse = Buffer | string
+type TCachedResponse = Buffer | string
+
+export interface ICachedResponse {
+	status: TCachedResponse
+	headers: TCachedResponse
+	body: TCachedResponse
+}

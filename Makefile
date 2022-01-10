@@ -11,6 +11,7 @@ help:
 clean:
 	@echo "Cleaning build..."
 	rm -rf ./build; rm -rf ./node_modules;
+	docker-compose down
 
 # up-dev: Start dev server in Docker
 # up-dev: use 'build=yes' to rebuild (useful after installing new dependencies)

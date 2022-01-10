@@ -15,12 +15,12 @@ export const handler = async (
 		const cached = await getCachedResponse(url)
 
 		if (cached) {
-			logger.info({ url }, 'returned from cache')
+			logger.debug({ url }, 'returned from cache')
 			res.writeHead(
-				Number(cached[0]),
-				JSON.parse(cached[1] as string) as OutgoingHttpHeaders
+				Number(cached.status),
+				JSON.parse(cached.headers as string) as OutgoingHttpHeaders
 			)
-			res.write(cached[2] as Buffer)
+			res.write(cached.body as Buffer)
 			res.end()
 			return
 		}

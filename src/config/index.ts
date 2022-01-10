@@ -34,7 +34,7 @@ export const config = convict({
 				default: 'https://web-writer.eu.smartlook.cloud',
 			},
 			mobileSdk: {
-				doc: 'Mobile SDK host',
+				doc: 'Mobile Writer host',
 				format: String,
 				env: 'MOBILE_SDK_HOST',
 				default: 'https://sdk-writer.eu.smartlook.cloud',
