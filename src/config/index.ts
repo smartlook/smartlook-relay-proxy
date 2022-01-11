@@ -15,6 +15,12 @@ export const config = convict({
 			default: 9000,
 		},
 		hosts: {
+			relayProxy: {
+				doc: 'Relay proxy host',
+				format: String,
+				env: 'RELAY_PROXY_HOST',
+				default: null,
+			},
 			webSdk: {
 				doc: 'Web SDK host',
 				format: String,
@@ -65,6 +71,22 @@ export const config = convict({
 			format: Number,
 			env: 'REDIS_CACHE_EXPIRY_SECONDS',
 			default: 600,
+		},
+	},
+	logger: {
+		level: {
+			doc: 'Logger level',
+			format: [
+				'trace',
+				'debug',
+				'info',
+				'warn',
+				'error',
+				'fatal',
+				'silent',
+			],
+			env: 'LOGGER_LEVEL',
+			default: 'info',
 		},
 	},
 })
