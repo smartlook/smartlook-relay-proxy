@@ -8,15 +8,11 @@ by your visitors.
 
 Defined in `.env` file.
 
-| Name                         | Type     | Default value |
-| ---------------------------- | -------- | ------------- |
-| `REDIS_HOST`                 | `string` | `null`        |
-| `REDIS_PORT`                 | `number` | `null`        |
-| `REDIS_CACHE_EXPIRY_SECONDS` | `number` | `600`         |
+| Name               | Type     | Default value |
+| ------------------ | -------- | ------------- |
+| `RELAY_PROXY_HOST` | `string` | `null`        |
 
-If `REDIS_HOST` and `REDIS_PORT` are not set (default), the responses from Smartlook backend **will not** be cached.
-
-## Instalation and deployment
+## Installation and deployment
 
 ```sh
 # See all available commands
@@ -40,7 +36,7 @@ make help
 
 # Build and start development server (port 80 by default)
 # Do not forget to configure environment variables in docker-compose.dev.yml
-make up-dev-build
+make dev # add `build=yes` for rebuild
 ```
 
 ## License

@@ -4,7 +4,6 @@ services:
         container_name: smartlook_relay_proxy
         build:
             context: .
-            dockerfile: Dockerfile
             target: dev
         volumes:
             - ./src:/home/node/app/src:ro
@@ -13,24 +12,4 @@ services:
         environment:
             NODE_ENV: development
             PROXY_PORT: 9000
-            REDIS_HOST: redis
-            REDIS_PORT: 6379
-            REDIS_CACHE_EXPIRY_SECONDS: 600
-        depends_on:
-            - redis
-
-    redis:
-        container_name: smartlook_relay_proxy_redis
-        image: redis:6
-        ports:
-            - 6379:6379
-
-    redis-commander:
-        container_name: smartlook_relay_proxy_redis_commander
-        image: rediscommander/redis-commander:latest
-        ports:
-            - 81:8081
-        environment:
-            REDIS_HOSTS: local:redis:6379
-        depends_on:
-            - redis
+            RELAY_PROXY_HOST: ${RELAY_PROXY_HOST}

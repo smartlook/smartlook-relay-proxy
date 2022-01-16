@@ -5,6 +5,8 @@ import * as zlib from 'zlib'
 import { config } from '../config'
 import { logger } from '../logger'
 
+import { IProxyRouteConfig } from './types'
+
 export const bufferToJson = (buffer: Buffer): unknown => {
 	try {
 		return JSON.parse(buffer.toString('utf-8'))
@@ -60,7 +62,7 @@ export const decompressResponse = async (stream: Readable): Promise<Buffer> => {
 	})
 }
 
-export const stripPrefix = (reqUrl: string, prefix?: string): string => {
+const stripPrefix = (reqUrl: string, prefix?: string): string => {
 	if (prefix && reqUrl.startsWith(prefix)) {
 		return reqUrl.substring(prefix.length)
 	}
@@ -79,4 +81,8 @@ export const prepareHeaders = (
 		// Next line bypasses: [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames.
 		...(config.get('env') === 'development' && { host: '' }),
 	}
+}
+
+export const buildUrl = (route: IProxyRouteConfig, url: string): string => {
+	return `${route.targetHost}${stripPrefix(url, route.proxyPrefix)}`
 }

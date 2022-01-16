@@ -6,6 +6,7 @@ const PORT = config.get('proxy.port')
 
 const start = (): void => {
 	logger.info('Starting proxy...')
+
 	const app = initApp()
 
 	app.listen(PORT, () => {

@@ -13,9 +13,9 @@ clean:
 	rm -rf ./build; rm -rf ./node_modules;
 	docker-compose down
 
-# up-dev: Start dev server in Docker
-# up-dev: use 'build=yes' to rebuild (useful after installing new dependencies)
-up-dev:
+# dev: Start dev server in Docker
+# dev: use 'build=yes' to rebuild (useful after installing new dependencies)
+dev:
 ifeq ($(build),yes)
 	@echo "Rebuilding and starting development server..."
 	docker-compose -f docker-compose.dev.yml up --build --remove-orphans
@@ -24,16 +24,21 @@ else
 	docker-compose -f docker-compose.dev.yml up
 endif
 
+# lint: Lint all files (runs ESLint & Prettier)
+lint:
+	@echo "Linting..."
+	npm run lint
+
 # build: Build Docker image for production
 build:
 	@echo "Building for production..."
-	docker build -t smartlook-proxy .
+	docker build -t smartlook-relay-proxy .
 
 # up: Run Docker image in production mode. Specify local port by setting 'port=<number>'
 up:
 ifdef port
 	@echo "Running Docker image..."
-	docker run --env-file ./.env -d -p $(port):9000 --name smartlook-proxy-prod smartlook-proxy
+	docker run --env-file ./.env -d -p $(port):9000 --name smartlook-relay-proxy smartlook-relay-proxy
 else
 	$(error port is required. Usage: 'make up port=<number>'')
 endif

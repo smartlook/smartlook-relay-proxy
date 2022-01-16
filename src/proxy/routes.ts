@@ -1,109 +1,111 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { IncomingMessage, ServerResponse } from 'http'
 
-import { config } from '../config'
-export interface IProxyRouteConfig {
-	name: string
-	targetHost: string
-	targetPath: string
-	pathPrefixMatch: boolean
-	proxyPrefix?: string
-	method: 'GET' | 'POST'
-	jsonPostProcess?: (json: any, host?: string) => any
+import * as undici from 'undici'
+
+import { logger } from '../logger'
+
+import { IProxyRouteConfig, IProxyRouteMethod } from './types'
+import {
+	bufferToJson,
+	compressJson,
+	decompressResponse,
+	prepareHeaders,
+} from './utils'
+
+export const status = (res: ServerResponse): void => {
+	res.writeHead(200, {
+		'Content-Type': 'application/json',
+	})
+	res.write(
+		JSON.stringify({
+			ok: true,
+			version: process.env.COMMIT_SHA ?? '',
+		})
+	)
+	res.end()
 }
 
-export const ROUTES: IProxyRouteConfig[] = [
-	{
-		name: 'webSdkRecorder',
-		targetHost: config.get('proxy.hosts.webSdk'),
-		targetPath: '/recorder.js',
-		method: 'GET',
-		pathPrefixMatch: false,
-	},
-	{
-		name: 'webSdkRecorder',
-		targetHost: config.get('proxy.hosts.webSdk'),
-		targetPath: '/es6/',
-		method: 'GET',
-		pathPrefixMatch: true,
-	},
-	{
-		name: 'managerSetupRecordingWebsite',
-		targetHost: config.get('proxy.hosts.manager'),
-		targetPath: '/rec/setup-recording/website',
-		method: 'POST',
-		pathPrefixMatch: true,
-		jsonPostProcess(
-			body: { recording: { assetsHost?: string; writerHost?: string } },
-			host?: string
-		): any {
-			if (typeof body !== 'object') {
-				return body
-			}
-			if (body?.recording?.assetsHost) {
-				body.recording.assetsHost =
-					config.get('proxy.hosts').relayProxy ?? host
-			}
-			if (body?.recording?.writerHost) {
-				body.recording.writerHost =
-					config.get('proxy.hosts').relayProxy ?? host
-			}
-			return body
+export const notFound = (req: IncomingMessage, res: ServerResponse): void => {
+	res.writeHead(404, { 'Content-Type': 'application/json' })
+	res.write(
+		JSON.stringify({
+			error: '[smartlook-proxy-relay]: Not Found',
+			message: `URL not found: ${req.method} - ${req.url}`,
+		})
+	)
+	res.end()
+}
+
+export const pipeResponse = async (
+	url: string,
+	req: IncomingMessage,
+	res: ServerResponse
+): Promise<void> => {
+	await undici.stream(
+		url,
+		{
+			opaque: { url, res },
+			method: req.method as IProxyRouteMethod,
+			headers: prepareHeaders(req.headers, req.socket.remoteAddress),
+			// eslint-disable-next-line no-undefined
+			body: req.method === 'POST' ? req : undefined,
 		},
-	},
-	{
-		name: 'managerSessionActive',
-		targetHost: config.get('proxy.hosts.manager'),
-		targetPath: '/rec/sessions/',
-		method: 'GET',
-		pathPrefixMatch: true,
-	},
-	{
-		name: 'managerSetupRecordingMobile',
-		targetHost: config.get('proxy.hosts.manager'),
-		targetPath: '/rec/setup-recording/mobile',
-		method: 'POST',
-		pathPrefixMatch: true,
-	},
-	{
-		name: 'managerLog',
-		targetHost: config.get('proxy.hosts.manager'),
-		targetPath: '/rec/log',
-		method: 'POST',
-		pathPrefixMatch: true,
-	},
-	{
-		name: 'assetsCache',
-		targetHost: config.get('proxy.hosts.assetsProxy'),
-		targetPath: '/cache',
-		method: 'POST',
-		pathPrefixMatch: false,
-	},
-	{
-		name: 'assetsProxyGetAsset',
-		targetHost: config.get('proxy.hosts.assetsProxy'),
-		targetPath: '/proxy',
-		method: 'GET',
-		pathPrefixMatch: true,
-	},
-	{
-		name: 'webWriterWrite',
-		targetHost: config.get('proxy.hosts.webWriter'),
-		targetPath: '/rec/v2/write',
-		method: 'POST',
-		pathPrefixMatch: true,
-	},
-	{
-		name: 'webWriterGetRecord',
-		targetHost: config.get('proxy.hosts.webWriter'),
-		targetPath: '/v2/record',
-		method: 'GET',
-		pathPrefixMatch: true,
-	},
-	{
-		name: 'sdkWriterWrite',
-		targetHost: config.get('proxy.hosts.mobileSdk'),
-		targetPath: '/write',
-		method: 'POST',
-		pathPrefixMatch: true,
-	},
-]
+		({ headers, opaque, statusCode }) => {
+			const { url: reqUrl, res: rawRes } = opaque as {
+				url: string
+				res: ServerResponse
+			}
+
+			logger.trace({ url: reqUrl, headers, statusCode }, 'Response')
+
+			rawRes.writeHead(statusCode, headers)
+
+			return rawRes
+		}
+	)
+}
+
+export const processBody = async (
+	route: IProxyRouteConfig,
+	url: string,
+	req: IncomingMessage,
+	res: ServerResponse
+): Promise<void> => {
+	// force compression to gzip and decompress the response
+	req.headers['accept-encoding'] = 'gzip'
+
+	const response = await undici.request(url, {
+		method: req.method as IProxyRouteMethod,
+		headers: prepareHeaders(req.headers, req.socket.remoteAddress),
+		// eslint-disable-next-line no-undefined
+		body: req.method === 'POST' ? req : undefined,
+	})
+
+	logger.trace(
+		{ url, headers: response.headers, statusCode: response.statusCode },
+		'Response'
+	)
+
+	if (
+		response.statusCode !== 200 ||
+		!response.headers['content-type']?.startsWith('application/json')
+	) {
+		res.writeHead(response.statusCode, response.headers)
+		response.body.pipe(res)
+		return
+	}
+
+	const body = await decompressResponse(response.body)
+	const json = bufferToJson(body)
+
+	if (json && route.jsonPostProcess) {
+		const finalJson = route.jsonPostProcess(json, req.headers.host)
+		const finalBody = await compressJson(finalJson)
+		response.headers['content-length'] = finalBody.length.toString()
+		res.writeHead(response.statusCode, response.headers)
+		res.end(finalBody)
+	} else {
+		res.writeHead(response.statusCode, response.headers)
+		res.end(body)
+	}
+}

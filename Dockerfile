@@ -44,4 +44,4 @@ EXPOSE 9000
 
 USER node
 
-CMD [ "npm", "run", "prod" ]
+CMD [ "node", "build/index.js" ]
