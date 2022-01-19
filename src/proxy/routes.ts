@@ -46,7 +46,7 @@ export const pipeResponse = async (
 		{
 			opaque: { url, res },
 			method: req.method as IProxyRouteMethod,
-			headers: prepareHeaders(req.headers, req.socket.remoteAddress),
+			headers: prepareHeaders(req.headers),
 			// eslint-disable-next-line no-undefined
 			body: req.method === 'POST' ? req : undefined,
 		},
@@ -76,7 +76,7 @@ export const processBody = async (
 
 	const response = await undici.request(url, {
 		method: req.method as IProxyRouteMethod,
-		headers: prepareHeaders(req.headers, req.socket.remoteAddress),
+		headers: prepareHeaders(req.headers),
 		// eslint-disable-next-line no-undefined
 		body: req.method === 'POST' ? req : undefined,
 	})

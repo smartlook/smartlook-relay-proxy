@@ -71,13 +71,10 @@ const stripPrefix = (reqUrl: string, prefix?: string): string => {
 }
 
 export const prepareHeaders = (
-	originalHeaders: IncomingHttpHeaders,
-	remoteAddress?: string
+	originalHeaders: IncomingHttpHeaders
 ): IncomingHttpHeaders => {
 	return {
 		...originalHeaders,
-		'X-Forwarded-Host': originalHeaders.host,
-		'X-Forwarded-For': originalHeaders['x-forwarded-for'] ?? remoteAddress,
 		// Next line bypasses: [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames.
 		...(config.get('env') === 'development' && { host: '' }),
 	}
