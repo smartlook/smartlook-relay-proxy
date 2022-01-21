@@ -1,10 +1,11 @@
 import { IncomingMessage, ServerResponse } from 'http'
 
-import { ROUTES } from '../config'
 import { logger } from '../logger'
 
-import { status, notFound, pipeResponse, processBody } from './routes'
-import { buildUrl } from './utils'
+import { ROUTES } from './routes'
+import { notFoundRoute } from './routes/not-found'
+import { statusRoute } from './routes/status'
+import { buildUrl, pipeResponse, processBody } from './utils'
 
 export const handler = async (
 	req: IncomingMessage,
@@ -17,7 +18,7 @@ export const handler = async (
 
 	// status
 	if (req.url === '/status') {
-		status(res)
+		statusRoute(res)
 		return
 	}
 
@@ -55,5 +56,5 @@ export const handler = async (
 	}
 
 	// Not Found
-	notFound(req, res)
+	notFoundRoute(req, res)
 }
