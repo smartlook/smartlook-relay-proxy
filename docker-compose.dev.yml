@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+    proxy:
+        container_name: smartlook_relay_proxy
+        build:
+            context: .
+            target: dev
+        volumes:
+            - ./src:/home/node/app/src:ro
+        ports:
+            - 80:9000
+        environment:
+            NODE_ENV: development
+            PROXY_PORT: 9000
+            RELAY_PROXY_HOST: ${RELAY_PROXY_HOST}
