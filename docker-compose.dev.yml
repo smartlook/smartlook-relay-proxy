@@ -8,8 +8,8 @@ services:
         volumes:
             - ./src:/home/node/app/src:ro
         ports:
-            - 80:9000
+            - 80:8000
         environment:
             NODE_ENV: development
-            PROXY_PORT: 9000
+            PROXY_PORT: 8000
             RELAY_PROXY_HOST: ${RELAY_PROXY_HOST}

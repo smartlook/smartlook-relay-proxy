@@ -31,7 +31,7 @@ FROM node:16-alpine as prod
 
 ENV HOME=/home/node/app
 ENV NODE_ENV=production
-ENV PROXY_PORT=9000
+ENV PROXY_PORT=8000
 
 WORKDIR $HOME
 
@@ -40,7 +40,7 @@ COPY --from=build /home/node/app/package*.json ./
 
 RUN npm ci --only=production
 
-EXPOSE 9000
+EXPOSE 8000
 
 USER node
 

@@ -38,7 +38,7 @@ build:
 up:
 ifdef port
 	@echo "Running Docker image..."
-	docker run --env-file ./.env -d -p $(port):9000 --name smartlook-relay-proxy smartlook-relay-proxy
+	docker run --env-file ./.env -d -p $(port):8000 --name smartlook-relay-proxy smartlook-relay-proxy
 else
 	$(error port is required. Usage: 'make up port=<number>'')
 endif

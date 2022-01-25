@@ -12,7 +12,7 @@ export const config = convict({
 			doc: 'Proxy port',
 			format: Number,
 			env: 'PROXY_PORT',
-			default: 9000,
+			default: 8000,
 		},
 		hosts: {
 			relayProxy: {
