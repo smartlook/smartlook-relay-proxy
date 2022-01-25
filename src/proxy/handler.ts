@@ -45,11 +45,11 @@ export const handler = async (
 
 		logger.trace({ url, headers: req.headers }, 'Request')
 
-		if (!route.jsonPostProcess) {
+		if (route.jsonPostProcess) {
+			await processBody(route, url, req, res)
+		} else {
 			// no processing needed, just pipe the response to client
 			await pipeResponse(url, req, res)
-		} else {
-			await processBody(route, url, req, res)
 		}
 
 		return
