@@ -12,4 +12,6 @@ services:
         environment:
             NODE_ENV: development
             PROXY_PORT: 8000
+            # defined in .env
             RELAY_PROXY_HOST: ${RELAY_PROXY_HOST}
+            LOGGER_LEVEL: ${LOGGER_LEVEL}
