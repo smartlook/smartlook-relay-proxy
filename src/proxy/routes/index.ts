@@ -1,5 +1,6 @@
 import { config } from '../../config'
 import { IManagerBody, IProxyRouteConfig } from '../types'
+import { buildHostUrl } from '../utils'
 
 export const ROUTES: IProxyRouteConfig[] = [
 	{
@@ -49,12 +50,10 @@ export const ROUTES: IProxyRouteConfig[] = [
 				return body
 			}
 			if (body?.recording?.assetsHost) {
-				body.recording.assetsHost =
-					config.get('proxy.hosts.relayProxy') ?? host
+				body.recording.assetsHost = buildHostUrl() ?? host
 			}
 			if (body?.recording?.writerHost) {
-				body.recording.writerHost =
-					config.get('proxy.hosts.relayProxy') ?? host
+				body.recording.writerHost = buildHostUrl() ?? host
 			}
 			return body
 		},
@@ -77,6 +76,13 @@ export const ROUTES: IProxyRouteConfig[] = [
 		name: 'managerLog',
 		targetHost: config.get('proxy.hosts.manager'),
 		targetPath: '/rec/log',
+		method: 'POST',
+		pathPrefixMatch: true,
+	},
+	{
+		name: 'managerConsent',
+		targetHost: config.get('proxy.hosts.manager'),
+		targetPath: '/rec/consent',
 		method: 'POST',
 		pathPrefixMatch: true,
 	},

@@ -4,9 +4,23 @@ import * as zlib from 'zlib'
 
 import undici from 'undici'
 
+import { config } from '../config'
 import { logger } from '../logger'
 
 import { IProxyRouteConfig, IProxyRouteMethod } from './types'
+
+export const buildHostUrl = (): string | null => {
+	const host = config.get('proxy.hosts.relayProxy') as string | null
+
+	if (host) {
+		if (host.startsWith('https://')) {
+			return host
+		}
+		return `https://${host}`
+	}
+
+	return null
+}
 
 export const bufferToJson = (buffer: Buffer): unknown => {
 	try {
