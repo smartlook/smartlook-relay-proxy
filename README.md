@@ -48,26 +48,7 @@ docker run --name="smartlook-relay-proxy" -d \
     c.src = 'https://<RELAY_PROXY_HOST>/recorder.js';
     h.appendChild(c);
   })(document);
-  smartlook('init', <KEY>, {
-    host: <RELAY_PROXY_HOST>,
-    loggingLevel: 1,
-    forceSetupData: {
-    recording: {
-      disableApi: false,
-      disableForms: false,
-      maskEmails: false,
-      maskNumbers: false,
-      recordConsole: true,
-      recordNetwork: true,
-      signedDpa: true,
-    },
-    consent: {
-      api: true,
-      forms: true,
-      ip: true,
-    }
-  }
-  });
+  smartlook('init', <KEY>, { host: <RELAY_PROXY_HOST> });
 </script>
 ```
 
