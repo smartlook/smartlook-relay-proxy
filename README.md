@@ -3,6 +3,8 @@
 This service relays HTTP requests from your domain/subdomain to
 Smartlook's recording domains, allowing you to bypass Ad blockers used
 by your visitors.
+> **Only web recording is currently supported.**  
+> Support for Mobile SDKs will be added soon.
 
 ## Environment variables
 
@@ -28,25 +30,9 @@ docker run --name="smartlook-relay-proxy" -d \
 
 2. Point your subdomain/reverse proxy to specified port
 
-3. Replace URLs in tracking code
+3. Replace URLs in tracking code (**only next-gen is supported**)
 
 ```html
-<script>
-  window.smartlook||(function(d) {
-    var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
-    var c=d.createElement('script');o.api=new Array();c.async=true;c.crossOrigin='anonymous';c.type='text/javascript';
-    c.charset='utf-8';c.src="https://<RELAY_PROXY_HOST>/recorder.js";h.appendChild(c);
-  })(document);
-  smartlook('init', <KEY>, {
-    "host": <RELAY_PROXY_HOST>,
-    "options": {
-      "recordConsole": true,
-      "recordNetwork": true
-    }
-  });
-</script>
-
-<!-- If you are using next-gen -->
 <script>
   window.smartlook ||
     (function (d) {
