@@ -10,9 +10,8 @@ by your visitors.
 
 | Name                      | Type     | Default value                             | Description                                                         |
 | ------------------------- | -------- | ----------------------------------------- | ------------------------------------------------------------------- |
-| `RELAY_PROXY_HOST`        | `string` | `null`                                    | Hostname on which will the proxy run on                             |
 | `LOGGER_LEVEL`            | `string` | `'info'`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent` |
-| `MANAGER_HOST`            | `string` | `'https://manager.eu.smartlook.com'`      | Smartlook Manager host                                              |
+| `MANAGER_HOST`            | `string` | `'https://manager.eu.smartlook.cloud'`    | Smartlook Manager host                                              |
 | `WEB_SDK_WRITER_HOST`     | `string` | `'https://web-writer.eu.smartlook.cloud'` | Smartlook Web Writer host                                           |
 
 ## Installation and deployment
@@ -24,7 +23,6 @@ Production-ready image is available on [Docker Hub](https://hub.docker.com/r/sma
 ```sh
 docker run --name="smartlook-relay-proxy" -d \
   # can be also set with "--env-file"
-  -e RELAY_PROXY_HOST=<host> \
   -e LOGGER_LEVEL=<level> \       # optional
   -e MANAGER_HOST=<host> \        # optional
   -e WEB_SDK_WRITER_HOST=<host> \ # optional
@@ -49,10 +47,10 @@ docker run --name="smartlook-relay-proxy" -d \
     c.crossOrigin = 'anonymous';
     c.type = 'text/javascript';
     c.charset = 'utf-8';
-    c.src = 'https://<RELAY_PROXY_HOST>/recorder.js';
+    c.src = 'https://<your-relay-proxy-host>/recorder.js';
     h.appendChild(c);
   })(document);
-  smartlook('init', <KEY>, { host: <RELAY_PROXY_HOST> });
+  smartlook('init', <KEY>, { host: <your-relay-proxy-host> });
 </script>
 ```
 

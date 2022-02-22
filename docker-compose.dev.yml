@@ -14,6 +14,5 @@ services:
             PROXY_PORT: 8000
             # defined in .env
             LOGGER_LEVEL: ${LOGGER_LEVEL}
-            RELAY_PROXY_HOST: ${RELAY_PROXY_HOST}
             MANAGER_HOST: ${MANAGER_HOST}
             WEB_SDK_WRITER_HOST: ${WEB_SDK_WRITER_HOST}

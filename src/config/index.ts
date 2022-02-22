@@ -15,12 +15,6 @@ export const config = convict({
 			default: 8000,
 		},
 		hosts: {
-			relayProxy: {
-				doc: 'Relay proxy host',
-				format: String,
-				env: 'RELAY_PROXY_HOST',
-				default: null,
-			},
 			webSdk: {
 				doc: 'Web SDK host',
 				format: String,
@@ -49,7 +43,7 @@ export const config = convict({
 				doc: 'Manager host',
 				format: String,
 				env: 'MANAGER_HOST',
-				default: 'https://manager.eu.smartlook.com',
+				default: 'https://manager.eu.smartlook.cloud',
 			},
 		},
 	},

@@ -31,7 +31,7 @@ export const handler = async (
 
 		const url = buildUrl(route, req.url)
 
-		await pipeResponse(url, req, res)
+		await pipeResponse(route.targetHost, url, req, res)
 
 		return
 	}

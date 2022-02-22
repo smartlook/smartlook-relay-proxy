@@ -3,7 +3,6 @@ import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'http'
 import undici from 'undici'
 import { HttpMethod } from 'undici/types/dispatcher'
 
-import { config } from '../config'
 import { logger } from '../logger'
 
 import { IProxyRouteConfig, IStreamOpaque } from './types'
@@ -16,38 +15,34 @@ export const buildUrl = (route: IProxyRouteConfig, reqUrl: string): string => {
 }
 
 export const prepareHeaders = (
-	url: string,
+	host: string,
 	originalHeaders: IncomingHttpHeaders,
 	remoteAddress?: string
-): IncomingHttpHeaders => {
-	const webWriterHost = config
-		.get('proxy.hosts.webSdkWriter')
-		.split('https://')[1]
-
-	const host = url.includes('/rec/v2/write')
-		? webWriterHost
-		: // Next line bypasses: [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames.
-		  ''
-
-	return {
-		...originalHeaders,
-		'x-forwarded-for': originalHeaders['x-forwarded-for'] ?? remoteAddress,
-		'x-forwarded-host': host,
-		host,
-	}
-}
+): IncomingHttpHeaders => ({
+	...originalHeaders,
+	'x-forwarded-for': originalHeaders['x-forwarded-for'] ?? remoteAddress,
+	'x-forwarded-host': host,
+	host,
+})
 
 export const pipeResponse = async (
+	routeTargetHost: string,
 	url: string,
 	req: IncomingMessage,
 	res: ServerResponse
 ): Promise<void> => {
+	const host = routeTargetHost.split('https://')[1] ?? ''
+
 	await undici.stream(
 		url,
 		{
 			opaque: { url, res },
 			method: req.method as HttpMethod,
-			headers: prepareHeaders(url, req.headers, req.socket.remoteAddress),
+			headers: prepareHeaders(
+				host,
+				req.headers,
+				req.socket.remoteAddress
+			),
 			// eslint-disable-next-line no-undefined
 			body: req.method === 'POST' ? req : undefined,
 		},
