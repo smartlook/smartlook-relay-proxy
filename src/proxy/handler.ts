@@ -5,7 +5,7 @@ import { logger } from '../logger'
 import { ROUTES } from './routes'
 import { notFoundRoute } from './routes/not-found'
 import { statusRoute } from './routes/status'
-import { buildUrl, pipeResponse, processBody } from './utils'
+import { buildUrl, pipeResponse } from './utils'
 
 export const handler = async (
 	req: IncomingMessage,
@@ -22,35 +22,16 @@ export const handler = async (
 		return
 	}
 
+	logger.trace({ url: req.url, headers: req.headers }, 'Request')
+
 	for (const route of ROUTES) {
-		// check method
-		if (route.method !== req.method) {
-			continue
-		}
-
-		// check path
-		const matchPath = route.proxyPrefix
-			? `${route.proxyPrefix}${route.targetPath}`
-			: route.targetPath
-
-		if (
-			!(route.pathPrefixMatch
-				? req.url.startsWith(matchPath)
-				: req.url === matchPath)
-		) {
+		if (!req.url.startsWith(route.prefix)) {
 			continue
 		}
 
 		const url = buildUrl(route, req.url)
 
-		logger.trace({ url, headers: req.headers }, 'Request')
-
-		if (route.jsonPostProcess) {
-			await processBody(route, url, req, res)
-		} else {
-			// no processing needed, just pipe the response to client
-			await pipeResponse(url, req, res)
-		}
+		await pipeResponse(route.targetHost, url, req, res)
 
 		return
 	}

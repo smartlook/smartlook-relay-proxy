@@ -1,125 +1,53 @@
 import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'http'
-import { Readable } from 'stream'
-import * as zlib from 'zlib'
 
 import undici from 'undici'
+import { HttpMethod } from 'undici/types/dispatcher'
 
-import { config } from '../config'
 import { logger } from '../logger'
 
-import { IProxyRouteConfig, IProxyRouteMethod } from './types'
+import { IProxyRouteConfig, IStreamOpaque } from './types'
 
-export const buildHostUrl = (): string | null => {
-	const host = config.get('proxy.hosts.relayProxy') as string | null
-
-	if (host) {
-		if (host.startsWith('https://')) {
-			return host
-		}
-		return `https://${host}`
+export const buildUrl = (route: IProxyRouteConfig, reqUrl: string): string => {
+	if (route.stripPrefix) {
+		return `${route.targetHost}${reqUrl.substring(route.prefix.length)}`
 	}
-
-	return null
-}
-
-export const bufferToJson = (buffer: Buffer): unknown => {
-	try {
-		return JSON.parse(buffer.toString('utf-8'))
-	} catch (err) {
-		logger.error(
-			{ err, buffer: buffer.toString('utf-8') },
-			'Failed to parse json'
-		)
-		return null
-	}
-}
-
-const jsonToBuffer = (json: unknown): Buffer => {
-	try {
-		return Buffer.from(JSON.stringify(json))
-	} catch (err) {
-		logger.error({ err, json }, 'Failed to stringify json')
-		return Buffer.from('{ "error": "Failed to process upstream response" }')
-	}
-}
-
-export const compressJson = async (json: unknown): Promise<Buffer> => {
-	return new Promise((resolve, reject) => {
-		zlib.gzip(jsonToBuffer(json), (err, buffer) => {
-			if (err) {
-				logger.error({ err, json }, 'Failed to compress json')
-				reject(err)
-			}
-			resolve(buffer)
-		})
-	})
-}
-
-export const decompressResponse = async (stream: Readable): Promise<Buffer> => {
-	const gunzip = zlib.createGunzip()
-	stream.pipe(gunzip)
-	return new Promise((resolve) => {
-		const buffers: Buffer[] = []
-
-		gunzip
-			.on('data', (chunk: Buffer) => {
-				buffers.push(chunk)
-			})
-			.on('end', () => {
-				resolve(Buffer.concat(buffers))
-			})
-			.on('error', (err: Error) => {
-				logger.error({ err }, 'Failed to decompress response')
-				resolve(
-					Buffer.from('{ "error": "Failed to decompress response" }')
-				)
-			})
-	})
-}
-
-const stripPrefix = (reqUrl: string, prefix?: string): string => {
-	if (prefix && reqUrl.startsWith(prefix)) {
-		return reqUrl.substring(prefix.length)
-	}
-
-	return reqUrl
+	return `${route.targetHost}${reqUrl}`
 }
 
 export const prepareHeaders = (
+	host: string,
 	originalHeaders: IncomingHttpHeaders,
 	remoteAddress?: string
-): IncomingHttpHeaders => {
-	return {
-		...originalHeaders,
-		'X-Forwarded-For': originalHeaders['x-forwarded-for'] ?? remoteAddress,
-		// Next line bypasses: [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames.
-		host: '',
-	}
-}
-
-export const buildUrl = (route: IProxyRouteConfig, url: string): string => {
-	return `${route.targetHost}${stripPrefix(url, route.proxyPrefix)}`
-}
+): IncomingHttpHeaders => ({
+	...originalHeaders,
+	'x-forwarded-for': originalHeaders['x-forwarded-for'] ?? remoteAddress,
+	'x-forwarded-host': host,
+	host,
+})
 
 export const pipeResponse = async (
+	routeTargetHost: string,
 	url: string,
 	req: IncomingMessage,
 	res: ServerResponse
 ): Promise<void> => {
+	const host = routeTargetHost.replace('https://', '')
+
 	await undici.stream(
 		url,
 		{
 			opaque: { url, res },
-			method: req.method as IProxyRouteMethod,
-			headers: prepareHeaders(req.headers, req.socket.remoteAddress),
+			method: req.method as HttpMethod,
+			headers: prepareHeaders(
+				host,
+				req.headers,
+				req.socket.remoteAddress
+			),
 			// eslint-disable-next-line no-undefined
 			body: req.method === 'POST' ? req : undefined,
 		},
 		({ headers, opaque, statusCode }) => {
-			const { url: reqUrl, res: rawRes } = opaque as {
-				url: string
-				res: ServerResponse
-			}
+			const { url: reqUrl, res: rawRes } = opaque as IStreamOpaque
 
 			logger.trace({ url: reqUrl, headers, statusCode }, 'Response')
 
@@ -128,49 +56,4 @@ export const pipeResponse = async (
 			return rawRes
 		}
 	)
-}
-
-export const processBody = async (
-	route: IProxyRouteConfig,
-	url: string,
-	req: IncomingMessage,
-	res: ServerResponse
-): Promise<void> => {
-	// force compression to gzip and decompress the response
-	req.headers['accept-encoding'] = 'gzip'
-
-	const response = await undici.request(url, {
-		method: req.method as IProxyRouteMethod,
-		headers: prepareHeaders(req.headers, req.socket.remoteAddress),
-		// eslint-disable-next-line no-undefined
-		body: req.method === 'POST' ? req : undefined,
-	})
-
-	logger.trace(
-		{ url, headers: response.headers, statusCode: response.statusCode },
-		'Response'
-	)
-
-	if (
-		response.statusCode !== 200 ||
-		!response.headers['content-type']?.startsWith('application/json')
-	) {
-		res.writeHead(response.statusCode, response.headers)
-		response.body.pipe(res)
-		return
-	}
-
-	const body = await decompressResponse(response.body)
-	const json = bufferToJson(body)
-
-	if (json && route.jsonPostProcess) {
-		const finalJson = route.jsonPostProcess(json, req.headers.host)
-		const finalBody = await compressJson(finalJson)
-		response.headers['content-length'] = finalBody.length.toString()
-		res.writeHead(response.statusCode, response.headers)
-		res.end(finalBody)
-	} else {
-		res.writeHead(response.statusCode, response.headers)
-		res.end(body)
-	}
 }

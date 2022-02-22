@@ -1,21 +1,13 @@
-export type IProxyRouteMethod = 'GET' | 'POST'
+import { ServerResponse } from 'http'
 
 export interface IProxyRouteConfig {
 	name: string
 	targetHost: string
-	targetPath: string
-	pathPrefixMatch: boolean
-	proxyPrefix?: string
-	method: IProxyRouteMethod
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	jsonPostProcess?: (json: any, host?: string) => any
+	prefix: string
+	stripPrefix: boolean
 }
 
-interface IManagerRecording {
-	assetsHost?: string
-	writerHost?: string
-}
-
-export interface IManagerBody {
-	recording: IManagerRecording
+export interface IStreamOpaque {
+	url: string
+	res: ServerResponse
 }
