@@ -31,7 +31,7 @@ export const pipeResponse = async (
 	req: IncomingMessage,
 	res: ServerResponse
 ): Promise<void> => {
-	const host = routeTargetHost.split('https://')[1] ?? ''
+	const host = routeTargetHost.replace('https://', '')
 
 	await undici.stream(
 		url,
