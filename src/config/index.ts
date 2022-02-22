@@ -5,7 +5,7 @@ export const config = convict({
 		doc: 'Application environment',
 		format: ['production', 'development', 'test'],
 		env: 'NODE_ENV',
-		default: 'development',
+		default: 'production',
 	},
 	proxy: {
 		port: {
@@ -36,20 +36,20 @@ export const config = convict({
 			webSdkWriter: {
 				doc: 'Web Writer host',
 				format: String,
-				env: 'WEB_WRITER_HOST',
+				env: 'WEB_SDK_WRITER_HOST',
 				default: 'https://web-writer.eu.smartlook.cloud',
 			},
 			mobileSdkWriter: {
 				doc: 'Mobile Writer host',
 				format: String,
-				env: 'MOBILE_SDK_HOST',
+				env: 'MOBILE_SDK_WRITER_HOST',
 				default: 'https://sdk-writer.eu.smartlook.cloud',
 			},
 			manager: {
 				doc: 'Manager host',
 				format: String,
 				env: 'MANAGER_HOST',
-				default: 'https://manager.smartlook.com',
+				default: 'https://manager.eu.smartlook.com',
 			},
 		},
 	},

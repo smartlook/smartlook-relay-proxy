@@ -8,10 +8,12 @@ by your visitors.
 
 ## Environment variables
 
-| Name               | Type     | Default value | Description                                                         |
-| ------------------ | -------- | ------------- | ------------------------------------------------------------------- |
-| `RELAY_PROXY_HOST` | `string` | `null`        | Hostname on which will the proxy run on                             |
-| `LOGGER_LEVEL`     | `string` | `'info'`      | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent` |
+| Name                      | Type     | Default value                             | Description                                                         |
+| ------------------------- | -------- | ----------------------------------------- | ------------------------------------------------------------------- |
+| `RELAY_PROXY_HOST`        | `string` | `null`                                    | Hostname on which will the proxy run on                             |
+| `LOGGER_LEVEL`            | `string` | `'info'`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent` |
+| `MANAGER_HOST`            | `string` | `'https://manager.eu.smartlook.com'`      | Smartlook Manager host                                              |
+| `WEB_SDK_WRITER_HOST`     | `string` | `'https://web-writer.eu.smartlook.cloud'` | Smartlook Web Writer host                                           |
 
 ## Installation and deployment
 
@@ -22,8 +24,10 @@ Production-ready image is available on [Docker Hub](https://hub.docker.com/r/sma
 ```sh
 docker run --name="smartlook-relay-proxy" -d \
   # can be also set with "--env-file"
-  -e RELAY_PROXY_HOST=<hostname> \
-  -e LOGGER_LEVEL=<level> \
+  -e RELAY_PROXY_HOST=<host> \
+  -e LOGGER_LEVEL=<level> \       # optional
+  -e MANAGER_HOST=<host> \        # optional
+  -e WEB_SDK_WRITER_HOST=<host> \ # optional
   -p <port>:8000 \
   smartlook/relay-proxy:latest
 ```
