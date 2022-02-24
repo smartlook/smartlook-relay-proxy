@@ -20,12 +20,27 @@ export const ROUTES: IProxyRouteConfig[] = [
 		prefix: '/web-writer',
 		stripPrefix: true,
 	},
+	// Legacy routes
+	{
+		name: 'webWriterGetRecord',
+		targetHost: config.get('proxy.hosts.webSdkWriter'),
+		prefix: '/record',
+		stripPrefix: false,
+	},
+	{
+		name: 'webWriterGetRecordV2',
+		targetHost: config.get('proxy.hosts.webSdkWriter'),
+		prefix: '/v2/record',
+		stripPrefix: false,
+	},
+	//
 	// {
 	// 	name: 'sdkWriter',
 	// 	targetHost: config.get('proxy.hosts.mobileSdkWriter'),
 	// 	prefix: '/sdk-writer',
 	// 	stripPrefix: true,
 	// },
+	//
 	// Request without prefix -> web-sdk
 	{
 		name: 'webSdk',
