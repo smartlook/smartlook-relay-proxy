@@ -27,7 +27,10 @@ export const handler = async (
 
 	for (const route of ROUTES) {
 		// Legacy routes, will be removed
-		if (req.url.startsWith('/record') || req.url.startsWith('/v2/record')) {
+		if (
+			req.url !== '/recorder.js' &&
+			(req.url.startsWith('/record') || req.url.startsWith('/v2/record'))
+		) {
 			const targetHost = config.get('proxy.hosts.webSdkWriter')
 			const url = `${targetHost}${req.url}`
 			await pipeResponse(targetHost, url, req, res)
