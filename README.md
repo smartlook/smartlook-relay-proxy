@@ -51,7 +51,7 @@ docker run --name="smartlook-relay-proxy" -d \
     c.src = 'https://<your-relay-proxy-host>/recorder.js';
     h.appendChild(c);
   })(document);
-  smartlook('init', <KEY>, { host: <your-relay-proxy-host> });
+  smartlook('init', <project-key>, { host: '<your-relay-proxy-host>' });
 </script>
 ```
 
