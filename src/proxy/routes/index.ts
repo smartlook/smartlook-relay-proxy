@@ -20,19 +20,6 @@ export const ROUTES: IProxyRouteConfig[] = [
 		prefix: '/web-writer',
 		stripPrefix: true,
 	},
-	// Legacy routes
-	{
-		name: 'webWriterGetRecord',
-		targetHost: config.get('proxy.hosts.webSdkWriter'),
-		prefix: '/record',
-		stripPrefix: false,
-	},
-	{
-		name: 'webWriterGetRecordV2',
-		targetHost: config.get('proxy.hosts.webSdkWriter'),
-		prefix: '/v2/record',
-		stripPrefix: false,
-	},
 	//
 	// {
 	// 	name: 'sdkWriter',
