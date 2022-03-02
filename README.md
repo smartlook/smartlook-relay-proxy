@@ -1,5 +1,4 @@
 # Smartlook Relay Proxy
-> ⚠️ Project is still under development, please wait for official Smartlook announcement before deploying it in your application.
 
 This service relays HTTP requests from your domain/subdomain to
 Smartlook's recording domains, allowing you to bypass Ad blockers used
@@ -14,6 +13,7 @@ by your visitors.
 | `LOGGER_LEVEL`            | `string` | `'info'`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent` |
 | `MANAGER_HOST`            | `string` | `'https://manager.eu.smartlook.cloud'`    | Smartlook Manager host                                              |
 | `WEB_SDK_WRITER_HOST`     | `string` | `'https://web-writer.eu.smartlook.cloud'` | Smartlook Web Writer host                                           |
+| `ASSETS_PROXY_HOST`       | `string` | `'https://assets-proxy.smartlook.cloud'`  | Smartlook Assets Proxy host                                         |
 
 ## Installation and deployment
 
@@ -27,6 +27,7 @@ docker run --name="smartlook-relay-proxy" -d \
   -e LOGGER_LEVEL=<level> \       # optional
   -e MANAGER_HOST=<host> \        # optional
   -e WEB_SDK_WRITER_HOST=<host> \ # optional
+  -e ASSETS_PROXY_HOST=<host> \   # optional
   -p <port>:8000 \
   smartlook/relay-proxy:latest
 ```

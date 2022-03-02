@@ -1,6 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http'
 
-import { config } from '../config'
 import { logger } from '../logger'
 
 import { ROUTES } from './routes'
@@ -26,17 +25,6 @@ export const handler = async (
 	logger.trace({ url: req.url, headers: req.headers }, 'Request')
 
 	for (const route of ROUTES) {
-		// Legacy routes, will be removed
-		if (
-			req.url !== '/recorder.js' &&
-			(req.url.startsWith('/record') || req.url.startsWith('/v2/record'))
-		) {
-			const targetHost = config.get('proxy.hosts.webSdkWriter')
-			const url = `${targetHost}${req.url}`
-			await pipeResponse(targetHost, url, req, res)
-			return
-		}
-
 		if (!req.url.startsWith(route.prefix)) {
 			continue
 		}
