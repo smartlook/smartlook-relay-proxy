@@ -23,7 +23,7 @@
 	"dependencies": {
 		"convict": "^6.2.1",
 		"pino": "^7.8.1",
-		"undici": "^4.15.0"
+		"undici": "^4.15.1"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^16.2.1",
