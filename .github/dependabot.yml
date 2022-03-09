@@ -12,3 +12,5 @@ updates:
       separator: '/'
     commit-message:
       prefix: chore
+    reviewers:
+      - 'samialdury'
