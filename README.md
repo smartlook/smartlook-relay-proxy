@@ -19,22 +19,23 @@ by your visitors.
 
 Image is available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-proxy).
 
-1. Run the image
+1. Run the image and configure environment variables according to your needs.  
+**All variables are optional, default values are listed in the table above**.
 
 ```sh
 docker run --name="smartlook-relay-proxy" -d \
   # can be also set with "--env-file"
-  -e LOGGER_LEVEL=<level> \       # optional
-  -e MANAGER_HOST=<host> \        # optional
-  -e WEB_SDK_WRITER_HOST=<host> \ # optional
-  -e ASSETS_PROXY_HOST=<host> \   # optional
-  -p <port>:8000 \                # mapping is optional, internally runs on port 8000
+  -e LOGGER_LEVEL=<level> \
+  -e MANAGER_HOST=<host> \
+  -e WEB_SDK_WRITER_HOST=<host> \
+  -e ASSETS_PROXY_HOST=<host> \
+  -p <port>:8000 \  # mapping is optional, internally runs on port 8000
   smartlook/relay-proxy:latest
 ```
 
-2. Create a new subdomain (e.g. *sl.yourdomain.com*) and point it to the container
+2. Create a new subdomain (e.g. *sl.yourdomain.com*) and point it to the container.
 
-3. Replace URLs in Smartlook script (**only next-gen tracking code is supported**)
+3. Replace URLs in Smartlook script (**only next-gen tracking code is supported**).
 
 ```html
 <script>
