@@ -1,7 +1,7 @@
 # Smartlook Relay Proxy
 
-This service relays HTTP requests from your domain/subdomain to
-Smartlook's recording domains, allowing you to bypass Ad blockers used
+This service relays HTTP requests from your subdomain to
+Smartlook's recording domains, allowing you to effectively bypass Ad blockers used
 by your visitors.
 > **Only web recording is currently supported.**  
 > Support for Mobile SDKs will be added soon.
@@ -17,7 +17,7 @@ by your visitors.
 
 ## Installation and deployment
 
-Production-ready image is available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-proxy).
+Image is available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-proxy).
 
 1. Run the image
 
@@ -28,13 +28,13 @@ docker run --name="smartlook-relay-proxy" -d \
   -e MANAGER_HOST=<host> \        # optional
   -e WEB_SDK_WRITER_HOST=<host> \ # optional
   -e ASSETS_PROXY_HOST=<host> \   # optional
-  -p <port>:8000 \
+  -p <port>:8000 \                # mapping is optional, internally runs on port 8000
   smartlook/relay-proxy:latest
 ```
 
-2. Point your subdomain/reverse proxy to specified port
+2. Create a new subdomain (e.g. *sl.yourdomain.com*) and point it to the container
 
-3. Replace URLs in tracking code (**only next-gen is supported**)
+3. Replace URLs in Smartlook script (**only next-gen tracking code is supported**)
 
 ```html
 <script>
@@ -57,6 +57,7 @@ docker run --name="smartlook-relay-proxy" -d \
 ```
 
 4. You're done! Visit your site and check the network tab to make sure the requests are sent through your subdomain.
+![network tab screenshot](https://raw.githubusercontent.com/smartlook/smartlook-relay-proxy/main/network.png)
 
 ## Development
 
