@@ -4,7 +4,6 @@ This service relays HTTP requests from your subdomain to
 Smartlook's recording domains, allowing you to bypass potential
 browser settings or extensions used by your visitors configured to limit data capture.
 > **Only web recording is currently supported.**  
-> Support for Mobile SDKs will be added soon.
 
 ## Environment variables
 
