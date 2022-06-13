@@ -22,7 +22,7 @@
 	},
 	"dependencies": {
 		"convict": "^6.2.3",
-		"pino": "^7.11.0",
+		"pino": "^8.0.0",
 		"undici": "^5.5.0"
 	},
 	"devDependencies": {
