@@ -22,11 +22,11 @@
 	},
 	"dependencies": {
 		"convict": "^6.2.3",
-		"pino": "^8.0.0",
+		"pino": "^8.2.0",
 		"undici": "^5.5.1"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^17.0.2",
+		"@commitlint/cli": "^17.0.3",
 		"@commitlint/config-conventional": "^17.0.3",
 		"@smartlook/eslint-config-base": "^1.4.0",
 		"@smartlook/eslint-config-node": "^1.4.0",
