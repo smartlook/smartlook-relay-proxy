@@ -18,12 +18,18 @@ export const prepareHeaders = (
 	host: string,
 	originalHeaders: IncomingHttpHeaders,
 	remoteAddress?: string
-): IncomingHttpHeaders => ({
-	...originalHeaders,
-	'x-forwarded-for': originalHeaders['x-forwarded-for'] ?? remoteAddress,
-	'x-forwarded-host': host,
-	host,
-})
+): IncomingHttpHeaders => {
+	// filter out forbidden client headers
+	const filteredHeaders = {
+		...originalHeaders,
+		'x-forwarded-for': originalHeaders['x-forwarded-for'] ?? remoteAddress,
+		'x-forwarded-host': host,
+		host,
+	}
+	delete filteredHeaders.connection
+	delete filteredHeaders.upgrade
+	return filteredHeaders
+}
 
 export const pipeResponse = async (
 	routeTargetHost: string,
