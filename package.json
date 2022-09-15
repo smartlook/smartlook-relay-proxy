@@ -29,7 +29,7 @@
 		"@commitlint/cli": "^17.1.2",
 		"@commitlint/config-conventional": "^17.1.0",
 		"@smartlook/eslint-config-base": "^1.5.1",
-		"@smartlook/eslint-config-node": "^1.4.0",
+		"@smartlook/eslint-config-node": "^1.4.1",
 		"@smartlook/eslint-config-prettier": "^1.4.1",
 		"@smartlook/eslint-config-typescript": "^1.5.1",
 		"@smartlook/prettier-config": "^1.4.1",
