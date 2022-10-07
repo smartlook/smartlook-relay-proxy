@@ -34,7 +34,7 @@
 		"@smartlook/eslint-config-typescript": "^1.5.1",
 		"@smartlook/prettier-config": "^1.4.1",
 		"@types/convict": "^6.1.1",
-		"@types/node": "^18.7.18",
+		"@types/node": "^18.8.3",
 		"eslint": "^8.23.1",
 		"husky": "^8.0.1",
 		"pino-pretty": "^9.1.1",
