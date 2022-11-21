@@ -35,7 +35,7 @@
 		"@smartlook/prettier-config": "^1.4.1",
 		"@types/convict": "^6.1.1",
 		"@types/node": "^18.11.9",
-		"eslint": "^8.27.0",
+		"eslint": "^8.28.0",
 		"husky": "^8.0.2",
 		"pino-pretty": "^9.1.1",
 		"prettier": "^2.7.1",
