@@ -21,7 +21,7 @@
 		"url": "https://github.com/smartlook/smartlook-relay-proxy/issues"
 	},
 	"dependencies": {
-		"convict": "^6.2.3",
+		"convict": "^6.2.4",
 		"pino": "^8.8.0",
 		"undici": "^5.14.0"
 	},
