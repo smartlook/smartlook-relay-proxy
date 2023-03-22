@@ -3,22 +3,16 @@
 	"description": "Smartlook Relay Proxy",
 	"license": "MIT",
 	"version": "3.1.2",
+	"private": true,
 	"main": "index.js",
 	"engines": {
-		"node": ">=18"
+		"node": ">=18",
+		"pnpm": ">=7"
 	},
 	"scripts": {
 		"lint": "eslint ./src --ext .ts && prettier --write \"./src/**/*.ts\"",
 		"dev": "tsc-watch --onSuccess \"node build/index.js\" | pino-pretty",
 		"build": "tsc"
-	},
-	"homepage": "https://github.com/smartlook/smartlook-relay-proxy#readme",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/smartlook/smartlook-relay-proxy.git"
-	},
-	"bugs": {
-		"url": "https://github.com/smartlook/smartlook-relay-proxy/issues"
 	},
 	"dependencies": {
 		"convict": "^6.2.4",
