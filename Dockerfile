@@ -1,5 +1,5 @@
 # Development (hot-reload)
-FROM node:16-alpine as dev
+FROM node:18-alpine as dev
 
 ENV HOME=/home/node/app
 WORKDIR $HOME
@@ -13,7 +13,7 @@ COPY . .
 CMD [ "npm", "run", "dev" ]
 
 # Build for production
-FROM node:16-alpine as build
+FROM node:18-alpine as build
 
 ENV HOME=/home/node/app
 WORKDIR $HOME
@@ -27,7 +27,7 @@ COPY . .
 RUN npm run build
 
 # Production
-FROM node:16-alpine as prod
+FROM node:18-alpine as prod
 
 ENV HOME=/home/node/app
 ENV NODE_ENV=production
