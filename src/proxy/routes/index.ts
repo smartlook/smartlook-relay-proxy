@@ -1,5 +1,5 @@
-import { config } from '../../config'
-import { IProxyRouteConfig } from '../types'
+import { config } from '../../config.js'
+import type { IProxyRouteConfig } from '../types.js'
 
 export const ROUTES: IProxyRouteConfig[] = [
 	{

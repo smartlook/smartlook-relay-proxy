@@ -7,7 +7,7 @@ export const statusRoute = (res: ServerResponse): void => {
 	res.write(
 		JSON.stringify({
 			ok: true,
-			version: process.env.COMMIT_SHA ?? '',
+			version: process.env['COMMIT_SHA'] ?? '',
 		})
 	)
 	res.end()

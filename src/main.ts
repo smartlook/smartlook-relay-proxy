@@ -1,6 +1,6 @@
-import { config } from './config'
-import { logger } from './logger'
-import { initApp } from './proxy'
+import { config } from './config.js'
+import { logger } from './logger.js'
+import { initApp } from './proxy/index.js'
 
 const PORT = config.get('proxy.port')
 

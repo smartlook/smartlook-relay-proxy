@@ -1,11 +1,11 @@
 import { IncomingMessage, ServerResponse } from 'http'
 
-import { logger } from '../logger'
+import { logger } from '../logger.js'
 
-import { ROUTES } from './routes'
-import { notFoundRoute } from './routes/not-found'
-import { statusRoute } from './routes/status'
-import { buildUrl, pipeResponse } from './utils'
+import { ROUTES } from './routes/index.js'
+import { notFoundRoute } from './routes/not-found.js'
+import { statusRoute } from './routes/status.js'
+import { buildUrl, pipeResponse } from './utils.js'
 
 export const handler = async (
 	req: IncomingMessage,

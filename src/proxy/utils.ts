@@ -1,11 +1,10 @@
-import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'http'
+import { type IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'http'
 
 import undici from 'undici'
-import { HttpMethod } from 'undici/types/dispatcher'
 
-import { logger } from '../logger'
+import { logger } from '../logger.js'
 
-import { IProxyRouteConfig, IStreamOpaque } from './types'
+import type { IProxyRouteConfig, IStreamOpaque } from './types.js'
 
 export const buildUrl = (route: IProxyRouteConfig, reqUrl: string): string => {
 	if (route.stripPrefix) {
@@ -43,14 +42,14 @@ export const pipeResponse = async (
 		url,
 		{
 			opaque: { url, res },
-			method: req.method as HttpMethod,
+			method: req.method as undici.Dispatcher.HttpMethod,
 			headers: prepareHeaders(
 				host,
 				req.headers,
 				req.socket.remoteAddress
 			),
 			// eslint-disable-next-line no-undefined
-			body: req.method === 'POST' ? req : undefined,
+			body: (req.method === 'POST' ? req : undefined) as any,
 		},
 		({ headers, opaque, statusCode }) => {
 			const { url: reqUrl, res: rawRes } = opaque as IStreamOpaque

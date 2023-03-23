@@ -1,6 +1,6 @@
-import pino from 'pino'
+import {pino} from 'pino'
 
-import { config } from '../config'
+import { config } from './config.js'
 
 export const logger = pino({
 	level: config.get('logger.level'),
