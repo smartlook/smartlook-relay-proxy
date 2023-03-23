@@ -10,6 +10,8 @@ ESLINT			:= $(NPM_BIN)/eslint
 PINO_PRETTY		:= $(NPM_BIN)/pino-pretty
 HUSKY			:= $(NPM_BIN)/husky
 
+COMMIT_SHA		:= $(shell git rev-parse HEAD)
+
 .PHONY: help
 ## Display this help
 help:
@@ -39,7 +41,7 @@ build: ## build TS
 
 .PHONY: build-image
 build-image: ## build Docker image (args=<build args>, tag=<string>)
-	docker build $(args) -t $(or $(tag), $(PROJECT_NAME)) . -f ./Dockerfile
+	docker build $(or $(args), --build-arg COMMIT_SHA='dev,$(COMMIT_SHA)') -t $(or $(tag), $(PROJECT_NAME)) . -f ./Dockerfile
 
 ##@ Test
 

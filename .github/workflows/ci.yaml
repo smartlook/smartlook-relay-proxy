@@ -78,12 +78,13 @@ jobs:
             - name: Git metadata
               id: git-meta
               run: |
-                  echo "BRANCH_OR_TAG_NORMALIZED_WITH_SHA=$(echo ${{ env.BRANCH_OR_TAG }} | tr '/' '-'), ${{ env.COMMIT_SHA }}" >> $GITHUB_OUTPUT
+                  echo "BRANCH_OR_TAG_NORMALIZED_WITH_SHA=$(echo ${{ env.BRANCH_OR_TAG }} | tr '/' '-'),${{ env.COMMIT_SHA }}" >> $GITHUB_OUTPUT
             - name: Build and push image to registry
               uses: docker/build-push-action@v4
               with:
                   context: .
                   push: true
+                  provenance: false
                   build-args: |
                       NODE_VERSION=${{ env.NODE_VERSION }}
                       PNPM_VERSION=${{ env.PNPM_VERSION }}
