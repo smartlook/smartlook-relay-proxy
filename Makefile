@@ -1,44 +1,93 @@
-# help: Show this help
-# find all lines with two # | and : | exclude fgrep | extract name and description | create table
+PROJECT_NAME	:= smartlook-relay-proxy
+
+NPM_BIN			:= ./node_modules/.bin
+
+TSC				:= $(NPM_BIN)/tsc
+TSX				:= $(NPM_BIN)/tsx
+VITEST			:= $(NPM_BIN)/vitest
+PRETTIER		:= $(NPM_BIN)/prettier
+ESLINT			:= $(NPM_BIN)/eslint
+PINO_PRETTY		:= $(NPM_BIN)/pino-pretty
+HUSKY			:= $(NPM_BIN)/husky
+
+.PHONY: help
+## Display this help
 help:
-	@echo
-	@echo "Smartlook Relay Proxy"
-	@echo
-	@fgrep -h "#" $(MAKEFILE_LIST) | fgrep : | fgrep -v fgrep | sed -e $$'s/#[[:blank:]]*\([^:]*\):\(.*\)/\\1##\\2/' | column -t -s '##'
-	@echo
+	@awk 'BEGIN {FS = ":.*##"; printf "Usage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-# clean: Remove all local build files & clean node_modules
-clean:
-	@echo "Cleaning build..."
-	rm -rf ./build; rm -rf ./node_modules;
-	docker-compose down
+##@ Development
 
-# dev: Start dev server in Docker
-# dev: use 'build=yes' to rebuild (useful after installing new dependencies)
-dev:
-ifeq ($(build),yes)
-	@echo "Rebuilding and starting development server..."
-	docker-compose -f docker-compose.dev.yml up --build --remove-orphans
-else
-	@echo "Starting development server..."
-	docker-compose -f docker-compose.dev.yml up
-endif
+.PHONY: install
+install: ## install all dependencies
+	pnpm install
+	$(HUSKY) install
 
-# lint: Lint all files (runs ESLint & Prettier)
-lint:
-	@echo "Linting..."
-	npm run lint
+.PHONY: dev
+dev: ## run TS (watch mode)
+	$(TSX) watch --clear-screen=false -r dotenv/config ./src/main.ts | $(PINO_PRETTY)
 
-# build: Build Docker image for production
-build:
-	@echo "Building for production..."
-	docker build -t smartlook-relay-proxy .
+.PHONY: run-js
+run-js: ## run built JS
+	node -r dotenv/config ./build/src/main.js
 
-# up: Run Docker image in production mode. Specify local port by setting 'port=<number>'
-up:
-ifdef port
-	@echo "Running Docker image..."
-	docker run --env-file ./.env -d -p $(port):8000 --name smartlook-relay-proxy smartlook-relay-proxy
-else
-	$(error port is required. Usage: 'make up port=<number>'')
-endif
+##@ Build
+
+.PHONY: build
+build: ## build TS
+	rm -rf ./build
+	$(TSC) --build --force
+
+.PHONY: build-image
+build-image: ## build Docker image (args=<build args>, tag=<string>)
+	docker build $(args) -t $(or $(tag), $(PROJECT_NAME)) . -f ./Dockerfile
+
+##@ Test
+
+.PHONY: test
+test: ## run tests
+	$(VITEST) run
+
+.PHONY: test-watch
+test-watch: ## run tests (watch mode)
+	$(VITEST) watch
+
+.PHONY: test-coverage
+test-coverage: ## run tests (with coverage)
+	$(VITEST) run --coverage
+
+##@ Code quality
+
+.PHONY: prettier
+prettier: ## run Prettier (autofix)
+	$(PRETTIER) --cache --write .
+
+.PHONY: eslint
+eslint: ## run ESLint (autofix)
+	$(ESLINT) --max-warnings 0 --cache --fix .
+
+.PHONY: lint
+lint: prettier eslint ## run Prettier & ESlint (autofix)
+
+##@ CI
+
+.PHONY: install-ci
+install-ci: ## install all dependencies (CI)
+	pnpm install --frozen-lockfile
+
+.PHONY: build-ci
+build-ci: ## build TS (CI)
+	$(TSC) --build --force
+
+.PHONY: test-ci
+test-ci: test-coverage ## run tests (CI)
+
+.PHONY: prettier-ci
+prettier-ci: ## run Prettier (CI)
+	$(PRETTIER) --check .
+
+.PHONY: eslint-ci
+eslint-ci: ## run ESLint (CI)
+	$(ESLINT) --max-warnings 0 .
+
+.PHONY: lint-ci
+lint-ci: prettier-ci eslint-ci ## run Prettier & ESlint (CI)
