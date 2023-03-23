@@ -38,6 +38,7 @@ export const pipeResponse = async (
 ): Promise<void> => {
 	const host = routeTargetHost.replace('https://', '')
 
+	// eslint-disable-next-line import/no-named-as-default-member
 	await undici.stream(
 		url,
 		{
@@ -48,7 +49,7 @@ export const pipeResponse = async (
 				req.headers,
 				req.socket.remoteAddress
 			),
-			// eslint-disable-next-line no-undefined
+			// eslint-disable-next-line
 			body: (req.method === 'POST' ? req : undefined) as any,
 		},
 		({ headers, opaque, statusCode }) => {

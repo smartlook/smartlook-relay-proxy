@@ -8,7 +8,7 @@ export const notFoundRoute = (
 	res.write(
 		JSON.stringify({
 			error: '[smartlook-proxy-relay]: Not Found',
-			message: `URL not found: ${req.method} - ${req.url}`,
+			message: `URL not found: ${req.method ?? ''} - ${req.url ?? ''}`,
 		})
 	)
 	res.end()

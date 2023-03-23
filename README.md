@@ -3,23 +3,24 @@
 This service relays HTTP requests from your subdomain to
 Smartlook's recording domains, allowing you to bypass potential
 browser settings or extensions used by your visitors configured to limit data capture.
-> **Only web recording is currently supported.**  
+
+> **Only web recording is currently supported.**
 
 ## Environment variables
 
-| Name                      | Type     | Default value                             | Description                                                         |
-| ------------------------- | -------- | ----------------------------------------- | ------------------------------------------------------------------- |
-| `LOGGER_LEVEL`            | `string` | `'info'`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent` |
-| `MANAGER_HOST`            | `string` | `'https://manager.eu.smartlook.cloud'`    | Smartlook Manager host                                              |
-| `WEB_SDK_WRITER_HOST`     | `string` | `'https://web-writer.eu.smartlook.cloud'` | Smartlook Web Writer host                                           |
-| `ASSETS_PROXY_HOST`       | `string` | `'https://assets-proxy.smartlook.cloud'`  | Smartlook Assets Proxy host                                         |
+| Name                  | Type     | Default value                             | Description                                                         |
+| --------------------- | -------- | ----------------------------------------- | ------------------------------------------------------------------- |
+| `LOGGER_LEVEL`        | `string` | `'info'`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent` |
+| `MANAGER_HOST`        | `string` | `'https://manager.eu.smartlook.cloud'`    | Smartlook Manager host                                              |
+| `WEB_SDK_WRITER_HOST` | `string` | `'https://web-writer.eu.smartlook.cloud'` | Smartlook Web Writer host                                           |
+| `ASSETS_PROXY_HOST`   | `string` | `'https://assets-proxy.smartlook.cloud'`  | Smartlook Assets Proxy host                                         |
 
 ## Installation and deployment
 
 Image is available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-proxy).
 
 1. Run the image and configure environment variables according to your needs.  
-**All variables are optional, default values are listed in the table above**.
+   **All variables are optional, default values are listed in the table above**.
 
 ```sh
 docker run --name="smartlook-relay-proxy" -d \
@@ -32,32 +33,32 @@ docker run --name="smartlook-relay-proxy" -d \
   smartlook/relay-proxy:latest
 ```
 
-2. Create a new subdomain (e.g. *sl.yourdomain.com*) and point it to the container.
+2. Create a new subdomain (e.g. _sl.yourdomain.com_) and point it to the container.
 
 3. Replace URLs in Smartlook script (**only next-gen tracking code is supported**).
 
 ```html
 <script>
-  window.smartlook ||
-    (function (d) {
-    var o = (smartlook = function () {
-      o.api.push(arguments)
-    }), h = d.getElementsByTagName('head')[0];
-    var c = d.createElement('script');
-    o.api = new Array();
-    c.async = true;
-    c.crossOrigin = 'anonymous';
-    c.type = 'text/javascript';
-    c.charset = 'utf-8';
-    c.src = 'https://<your-relay-proxy-host>/recorder.js';
-    h.appendChild(c);
-  })(document);
-  smartlook('init', <project-key>, { host: '<your-relay-proxy-host>' });
+	window.smartlook ||
+	  (function (d) {
+	  var o = (smartlook = function () {
+	    o.api.push(arguments)
+	  }), h = d.getElementsByTagName('head')[0];
+	  var c = d.createElement('script');
+	  o.api = new Array();
+	  c.async = true;
+	  c.crossOrigin = 'anonymous';
+	  c.type = 'text/javascript';
+	  c.charset = 'utf-8';
+	  c.src = 'https://<your-relay-proxy-host>/recorder.js';
+	  h.appendChild(c);
+	})(document);
+	smartlook('init', <project-key>, { host: '<your-relay-proxy-host>' });
 </script>
 ```
 
 4. You're done! Visit your site and check the network tab to make sure the requests are sent through your subdomain.
-![network tab screenshot](https://raw.githubusercontent.com/smartlook/smartlook-relay-proxy/main/network.png)
+   ![network tab screenshot](https://raw.githubusercontent.com/smartlook/smartlook-relay-proxy/main/network.png)
 
 ## Development
 
