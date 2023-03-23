@@ -75,18 +75,19 @@ jobs:
                   registry: ${{ env.IMAGE_REGISTRY }}
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
-            - name: Extract Git metadata
+            - name: Git metadata
               id: git-meta
               run: |
                   echo "BRANCH_OR_TAG_NORMALIZED_WITH_SHA=$(echo ${{ env.BRANCH_OR_TAG }} | tr '/' '-'), ${{ env.COMMIT_SHA }}" >> $GITHUB_OUTPUT
-            - name: Debug Git metadata
-              run: |
-                  echo "branch_normalized_with_sha: ${{ steps.git-meta.outputs.BRANCH_OR_TAG_NORMALIZED_WITH_SHA }}"
             - name: Build and push image to registry
               uses: docker/build-push-action@v4
               with:
                   context: .
-                  push: false
+                  push: true
+                  build-args: |
+                      NODE_VERSION=${{ env.NODE_VERSION }}
+                      PNPM_VERSION=${{ env.PNPM_VERSION }}
+                      COMMIT_SHA=${{ steps.git-meta.outputs.BRANCH_OR_TAG_NORMALIZED_WITH_SHA }}
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
                   platforms: ${{ env.IMAGE_PLATFORMS }}

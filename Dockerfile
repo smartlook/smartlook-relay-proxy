@@ -1,47 +1,83 @@
-# Development (hot-reload)
-FROM node:18-alpine as dev
+ARG NODE_VERSION=18
+ARG PNPM_VERSION=7
+ARG COMMIT_SHA="unknown"
 
-ENV HOME=/home/node/app
-WORKDIR $HOME
+################################################################
+#                                                              #
+#                     Prepare alpine image                     #
+#                                                              #
+################################################################
 
-COPY package*.json ./
+FROM node:${NODE_VERSION}-alpine as node-alpine
 
-RUN npm i
+ARG PNPM_VERSION
 
-COPY . .
+RUN apk --no-cache add curl
+RUN curl -sf https://gobinaries.com/tj/node-prune | sh
+RUN npm install --global pnpm@${PNPM_VERSION}
 
-CMD [ "npm", "run", "dev" ]
+################################################################
+#                                                              #
+#                   Prepare distroless image                   #
+#                                                              #
+################################################################
 
-# Build for production
-FROM node:18-alpine as build
+FROM gcr.io/distroless/nodejs${NODE_VERSION}-debian11:nonroot as node-distroless
 
-ENV HOME=/home/node/app
-WORKDIR $HOME
+################################################################
+#                                                              #
+#        Install all dependencies and build TypeScript         #
+#                                                              #
+################################################################
 
-COPY package*.json ./
+FROM node-alpine as build-js
 
-RUN npm i
+COPY package.json package.json
+COPY pnpm-lock.yaml pnpm-lock.yaml
 
-COPY . .
+RUN pnpm fetch
 
-RUN npm run build
+COPY tsconfig.base.json tsconfig.base.json
+COPY tsconfig.prod.json tsconfig.prod.json
+COPY src src
 
-# Production
-FROM node:18-alpine as prod
+RUN pnpm install --offline --frozen-lockfile
+RUN ./node_modules/.bin/tsc --project ./tsconfig.prod.json
 
-ENV HOME=/home/node/app
-ENV NODE_ENV=production
-ENV PROXY_PORT=8000
+################################################################
+#                                                              #
+#  Install only production dependencies & prune unused files   #
+#                                                              #
+################################################################
 
-WORKDIR $HOME
+FROM node-alpine as install-prod-deps
 
-COPY --from=build /home/node/app/build ./build
-COPY --from=build /home/node/app/package*.json ./
+ENV NODE_ENV="production"
 
-RUN npm ci --only=production
+COPY --from=build-js package.json package.json
+COPY --from=build-js pnpm-lock.yaml pnpm-lock.yaml
 
-EXPOSE 8000
+RUN pnpm fetch
+RUN pnpm install --offline --frozen-lockfile --prod
+RUN node-prune
 
-USER node
+################################################################
+#                                                              #
+#             Copy only necessary data for runtime             #
+#                                                              #
+################################################################
 
-CMD [ "node", "build/index.js" ]
+FROM node-distroless as final
+
+ARG COMMIT_SHA
+
+ENV NODE_OPTIONS="--enable-source-maps"
+ENV NODE_ENV="production"
+ENV COMMIT_SHA=${COMMIT_SHA}
+
+COPY --from=build-js --chown=nonroot:nonroot package.json package.json
+COPY --from=build-js --chown=nonroot:nonroot build build
+COPY --from=install-prod-deps --chown=nonroot:nonroot node_modules node_modules
+
+USER nonroot:nonroot
+CMD ["./build/src/main.js"]
