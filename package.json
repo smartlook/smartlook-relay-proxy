@@ -10,11 +10,6 @@
 		"node": ">=18",
 		"pnpm": ">=7"
 	},
-	"scripts": {
-		"lint": "eslint ./src --ext .ts && prettier --write \"./src/**/*.ts\"",
-		"dev": "tsc-watch --onSuccess \"node build/index.js\" | pino-pretty",
-		"build": "tsc"
-	},
 	"dependencies": {
 		"convict": "6.2.4",
 		"pino": "8.11.0",
