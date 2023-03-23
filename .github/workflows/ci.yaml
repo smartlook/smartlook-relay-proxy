@@ -74,13 +74,28 @@ jobs:
                   registry: ${{ env.IMAGE_REGISTRY }}
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
-            - name: Build and push image to registry
-              uses: docker/build-push-action@v4
-              with:
-                  context: .
-                  push: true
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  platforms: ${{ env.IMAGE_PLATFORMS }}
-                  tags: ${{ steps.docker-meta.outputs.tags }}
-                  labels: ${{ steps.docker-meta.outputs.labels }}
+            - name: Extract Git metadata
+              id: git-meta
+              run: |
+                  echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+                  echo "::set-output name=branch::$(git rev-parse --abbrev-ref HEAD)"
+                  echo "::set-output name=tag::$(git describe --tags --exact-match 2>/dev/null || true)"
+            - name: Debug Git metadata
+              run: |
+                  echo "sha_short: ${{ steps.git-meta.outputs.sha_short }}"
+                  echo "branch: ${{ steps.git-meta.outputs.branch }}"
+                  echo "tag: ${{ steps.git-meta.outputs.tag }}"
+                  echo "branch_n: ${${{ steps.git-meta.outputs.branch }}//\//-, ${{steps.git-meta.outputs.branch}}}"
+            # - name: Build and push image to registry
+            #   uses: docker/build-push-action@v4
+            #   with:
+            #       branch: ${{ steps.git-meta.outputs.branch }}
+            #       context: .
+            #       push: true
+            #       build-args: |
+            #         COMMIT_SHA=${{ github.sha }}
+            #       cache-from: type=gha
+            #       cache-to: type=gha,mode=max
+            #       platforms: ${{ env.IMAGE_PLATFORMS }}
+            #       tags: ${{ steps.docker-meta.outputs.tags }}
+            #       labels: ${{ steps.docker-meta.outputs.labels }}
