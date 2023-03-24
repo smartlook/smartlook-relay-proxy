@@ -1,17 +1,20 @@
 import { config } from './config.js'
 import { logger } from './logger.js'
+import { registerProcessHandlers } from './process-handlers.js'
 import { initApp } from './proxy/index.js'
 
-const PORT = config.get('proxy.port')
-
-const start = (): void => {
-	logger.info('Starting proxy...')
+function main(): void {
+	logger.info('Starting Relay Proxy')
 
 	const app = initApp()
 
-	app.listen(PORT, () => {
-		logger.info(`Proxy started on port ${PORT}`)
+	registerProcessHandlers(app)
+
+	const port = config.get('proxy.port')
+
+	app.listen(port, () => {
+		logger.info(`Relay Proxy started on port ${port}`)
 	})
 }
 
-start()
+main()
