@@ -34,6 +34,7 @@
 		"pino-pretty": "10.0.0",
 		"prettier": "2.8.6",
 		"tsc-watch": "6.0.0",
+		"tsx": "3.12.6",
 		"typescript": "5.0.2",
 		"vitest": "0.29.7"
 	}
