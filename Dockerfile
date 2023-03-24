@@ -1,5 +1,6 @@
 ARG NODE_VERSION=18
 ARG PNPM_VERSION=7
+ARG TINI_VERSION="v0.19.0"
 ARG COMMIT_SHA="unknown"
 
 ################################################################
@@ -11,7 +12,11 @@ ARG COMMIT_SHA="unknown"
 FROM node:${NODE_VERSION}-alpine as node-alpine
 
 ARG PNPM_VERSION
+ARG TINI_VERSION
 
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static /tini
+
+RUN chmod +x /tini
 RUN apk --no-cache add curl
 RUN curl -sf https://gobinaries.com/tj/node-prune | sh
 RUN npm install --global pnpm@${PNPM_VERSION}
@@ -75,9 +80,13 @@ ENV NODE_OPTIONS="--enable-source-maps"
 ENV NODE_ENV="production"
 ENV COMMIT_SHA=${COMMIT_SHA}
 
+COPY --from=node-alpine --chown=nonroot:nonroot /tini /tini
 COPY --from=build-js --chown=nonroot:nonroot package.json package.json
 COPY --from=build-js --chown=nonroot:nonroot build build
 COPY --from=install-prod-deps --chown=nonroot:nonroot node_modules node_modules
 
 USER nonroot:nonroot
-CMD ["./build/src/main.js"]
+
+ENTRYPOINT ["/tini", "--"]
+
+CMD ["/nodejs/bin/node", "./build/src/main.js"]
