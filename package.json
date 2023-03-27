@@ -3,43 +3,42 @@
 	"description": "Smartlook Relay Proxy",
 	"license": "MIT",
 	"version": "3.1.2",
-	"main": "index.js",
+	"private": true,
+	"type": "module",
+	"exports": "./build/src/main.js",
 	"engines": {
-		"node": ">=16.0.0"
-	},
-	"scripts": {
-		"lint": "eslint ./src --ext .ts && prettier --write \"./src/**/*.ts\"",
-		"dev": "tsc-watch --onSuccess \"node build/index.js\" | pino-pretty",
-		"build": "tsc"
-	},
-	"homepage": "https://github.com/smartlook/smartlook-relay-proxy#readme",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/smartlook/smartlook-relay-proxy.git"
-	},
-	"bugs": {
-		"url": "https://github.com/smartlook/smartlook-relay-proxy/issues"
+		"node": ">=18",
+		"pnpm": ">=7"
 	},
 	"dependencies": {
-		"convict": "^6.2.4",
-		"pino": "^8.11.0",
-		"undici": "^5.21.0"
+		"fast-json-stringify": "5.6.2",
+		"pino": "8.11.0",
+		"undici": "5.21.0",
+		"zod": "3.21.4"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^17.4.4",
-		"@commitlint/config-conventional": "^17.4.4",
-		"@smartlook/eslint-config-base": "^1.6.0",
-		"@smartlook/eslint-config-node": "^1.5.0",
-		"@smartlook/eslint-config-prettier": "^1.5.0",
-		"@smartlook/eslint-config-typescript": "^1.6.0",
-		"@smartlook/prettier-config": "^1.4.1",
-		"@types/convict": "^6.1.1",
-		"@types/node": "^18.15.3",
-		"eslint": "^8.36.0",
-		"husky": "^8.0.3",
-		"pino-pretty": "^10.0.0",
-		"prettier": "^2.8.4",
-		"tsc-watch": "^6.0.0",
-		"typescript": "^5.0.2"
+		"@commitlint/cli": "17.5.0",
+		"@commitlint/config-conventional": "17.4.4",
+		"@types/convict": "6.1.1",
+		"@types/node": "18.15.10",
+		"@types/supertest": "2.0.12",
+		"@typescript-eslint/eslint-plugin": "5.56.0",
+		"@typescript-eslint/parser": "5.56.0",
+		"@vitest/coverage-c8": "0.29.7",
+		"dotenv": "16.0.3",
+		"eslint": "8.36.0",
+		"eslint-config-prettier": "8.8.0",
+		"eslint-import-resolver-typescript": "3.5.3",
+		"eslint-plugin-import": "2.27.5",
+		"eslint-plugin-prettier": "4.2.1",
+		"husky": "8.0.3",
+		"lint-staged": "13.2.0",
+		"pino-pretty": "10.0.0",
+		"prettier": "2.8.7",
+		"supertest": "6.3.3",
+		"tsc-watch": "6.0.0",
+		"tsx": "3.12.6",
+		"typescript": "5.0.2",
+		"vitest": "0.29.7"
 	}
 }

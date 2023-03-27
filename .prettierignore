@@ -1,1 +1,4 @@
-*.md
+node_modules
+build
+coverage
+pnpm-lock.yaml

@@ -1,47 +1,92 @@
-# Development (hot-reload)
-FROM node:16-alpine as dev
+ARG NODE_VERSION=18
+ARG PNPM_VERSION=7
+ARG TINI_VERSION="v0.19.0"
+ARG COMMIT_SHA="unknown"
 
-ENV HOME=/home/node/app
-WORKDIR $HOME
+################################################################
+#                                                              #
+#                     Prepare alpine image                     #
+#                                                              #
+################################################################
 
-COPY package*.json ./
+FROM node:${NODE_VERSION}-alpine as node-alpine
 
-RUN npm i
+ARG PNPM_VERSION
+ARG TINI_VERSION
 
-COPY . .
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static /tini
 
-CMD [ "npm", "run", "dev" ]
+RUN chmod +x /tini
+RUN apk --no-cache add curl
+RUN curl -sf https://gobinaries.com/tj/node-prune | sh
+RUN npm install --global pnpm@${PNPM_VERSION}
 
-# Build for production
-FROM node:16-alpine as build
+################################################################
+#                                                              #
+#                   Prepare distroless image                   #
+#                                                              #
+################################################################
 
-ENV HOME=/home/node/app
-WORKDIR $HOME
+FROM gcr.io/distroless/nodejs${NODE_VERSION}-debian11:nonroot as node-distroless
 
-COPY package*.json ./
+################################################################
+#                                                              #
+#        Install all dependencies and build TypeScript         #
+#                                                              #
+################################################################
 
-RUN npm i
+FROM node-alpine as build-js
 
-COPY . .
+COPY package.json package.json
+COPY pnpm-lock.yaml pnpm-lock.yaml
 
-RUN npm run build
+RUN pnpm fetch
 
-# Production
-FROM node:16-alpine as prod
+COPY tsconfig.base.json tsconfig.base.json
+COPY tsconfig.prod.json tsconfig.prod.json
+COPY src src
 
-ENV HOME=/home/node/app
-ENV NODE_ENV=production
-ENV PROXY_PORT=8000
+RUN pnpm install --offline --frozen-lockfile
+RUN ./node_modules/.bin/tsc --project ./tsconfig.prod.json
 
-WORKDIR $HOME
+################################################################
+#                                                              #
+#  Install only production dependencies & prune unused files   #
+#                                                              #
+################################################################
 
-COPY --from=build /home/node/app/build ./build
-COPY --from=build /home/node/app/package*.json ./
+FROM node-alpine as install-prod-deps
 
-RUN npm ci --only=production
+ENV NODE_ENV="production"
 
-EXPOSE 8000
+COPY --from=build-js package.json package.json
+COPY --from=build-js pnpm-lock.yaml pnpm-lock.yaml
 
-USER node
+RUN pnpm fetch
+RUN pnpm install --offline --frozen-lockfile --prod
+RUN node-prune
 
-CMD [ "node", "build/index.js" ]
+################################################################
+#                                                              #
+#             Copy only necessary data for runtime             #
+#                                                              #
+################################################################
+
+FROM node-distroless as final
+
+ARG COMMIT_SHA
+
+ENV NODE_OPTIONS="--enable-source-maps"
+ENV NODE_ENV="production"
+ENV COMMIT_SHA=${COMMIT_SHA}
+
+COPY --from=node-alpine --chown=nonroot:nonroot /tini /tini
+COPY --from=build-js --chown=nonroot:nonroot package.json package.json
+COPY --from=build-js --chown=nonroot:nonroot build build
+COPY --from=install-prod-deps --chown=nonroot:nonroot node_modules node_modules
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/tini", "--"]
+
+CMD ["/nodejs/bin/node", "./build/src/main.js"]

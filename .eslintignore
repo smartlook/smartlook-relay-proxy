@@ -1,4 +1,6 @@
-.eslintrc.js
-.prettierrc.js
 node_modules
 build
+coverage
+commitlint.config.cjs
+lint-staged.config.cjs
+vitest.config.ts
