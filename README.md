@@ -12,7 +12,7 @@ browser settings or extensions used by your visitors configured to limit data ca
 > **Warning**
 > Relay Proxy is only for advanced users. If you're not sure what you're doing, please contact your developer.
 
-Images are available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-proxy) and [GitHub Packages](https://github.com/smartlook/smartlook-relay-proxy/pkgs/container/smartlook-relay-proxy).
+Images are available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-proxy) and [GitHub Packages](https://github.com/smartlook/smartlook-relay-proxy/pkgs/container/relay-proxy).
 
 1. Run the image and configure environment variables according to your needs.  
    **All variables are optional, default values are listed in the table below**.
