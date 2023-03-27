@@ -33,7 +33,7 @@ jobs:
               uses: docker/metadata-action@v4
               with:
                   images: |
-                      'smartlook/relay-proxy'
+                      smartlook/relay-proxy
                       ${{ env.IMAGE_REGISTRY }}/smartlook/relay-proxy
                   tags: |
                       type=ref,event=branch
