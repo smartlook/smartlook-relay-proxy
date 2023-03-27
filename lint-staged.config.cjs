@@ -1,24 +1,30 @@
 const path = require('node:path')
 const { ESLint } = require('eslint')
 
+function toRelative(file) {
+	return path.relative(process.cwd(), file)
+}
+
 async function removeIgnoredFiles(files) {
 	const eslint = new ESLint()
 	const isIgnored = await Promise.all(
 		files.map((file) => eslint.isPathIgnored(file))
 	)
 	const filteredFiles = files.filter((_, i) => !isIgnored[i])
-	return filteredFiles.join(' ')
+	return filteredFiles
 }
 
 module.exports = {
 	'*': async (files) => {
-		const relativePaths = files.map((file) =>
-			path.relative(process.cwd(), file)
-		)
-		return [`prettier --check ${relativePaths.join(' ')}`]
+		const filesToFormat = files.map(toRelative).join(' ')
+
+		return [`prettier --check ${filesToFormat}`]
 	},
 	'**/*.ts': async (files) => {
-		const filesToLint = await removeIgnoredFiles(files)
+		const filesToLint = (await removeIgnoredFiles(files))
+			.map(toRelative)
+			.join(' ')
+
 		return [`eslint --max-warnings=0 ${filesToLint}`]
 	},
 }
