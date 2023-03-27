@@ -1,15 +1,10 @@
-name: CI
+name: Publish release to Docker Hub
 
 on:
     workflow_dispatch:
-    push:
-        branches:
-            - 'main'
-        tags:
-            - 'v*'
-    pull_request:
-        branches:
-            - 'main'
+    release:
+        types:
+            - published
 
 env:
     NODE_VERSION: 18
@@ -21,41 +16,8 @@ env:
     BRANCH_OR_TAG: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
 jobs:
-    check:
+    publish:
         runs-on: ubuntu-22.04
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Set up pnpm
-              uses: pnpm/action-setup@v2
-              with:
-                  version: ${{ env.PNPM_VERSION }}
-
-            - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: ${{ env.NODE_VERSION }}
-                  cache: pnpm
-
-            - name: Install NPM dependencies
-              run: make install-ci
-
-            - name: Build TypeScript
-              run: make build-ci
-
-            - name: Run tests
-              run: make test-ci
-
-            - name: Format & lint
-              run: make lint-ci
-
-    docker:
-        needs: [check]
-        runs-on: ubuntu-22.04
-        permissions:
-            packages: write
-            contents: read
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -72,6 +34,7 @@ jobs:
               uses: docker/metadata-action@v4
               with:
                   images: |
+                      ${{ env.IMAGE_NAME }}
                       ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}
                   tags: |
                       type=ref,event=branch
@@ -83,8 +46,14 @@ jobs:
               uses: docker/login-action@v2
               with:
                   registry: ${{ env.IMAGE_REGISTRY }}
-                  username: ${{ github.actor }}
+                  username: ${{ github.repository_owner }}
                   password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v2
+              with:
+                  username: ${{ secrets.DOCKER_HUB_USERNAME }}
+                  password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
             - name: Git metadata
               id: git-meta
