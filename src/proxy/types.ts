@@ -1,13 +1,14 @@
-import { ServerResponse } from 'http'
+import { type IncomingHttpHeaders, ServerResponse } from 'http'
 
-export interface IProxyRouteConfig {
-	name: string
+export interface RouteMapping {
+	name: 'manager' | 'assets' | 'webWriter' | 'sdkWriter' | 'webSdk'
 	targetHost: string
-	prefix: string
+	prefix: `/${string}`
 	stripPrefix: boolean
 }
 
 export interface IStreamOpaque {
 	url: string
 	res: ServerResponse
+	outgoingHeaders: IncomingHttpHeaders
 }

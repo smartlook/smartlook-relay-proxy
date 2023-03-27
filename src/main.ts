@@ -1,19 +1,25 @@
-import { config } from './config.js'
-import { logger } from './logger.js'
+import { config, initConfig } from './config.js'
+import { initLogger, logger } from './logger.js'
 import { registerProcessHandlers } from './process-handlers.js'
-import { initApp } from './proxy/index.js'
+import { initHTTPServer } from './proxy/http-server.js'
 
-function main(): void {
-	logger.info('Starting Relay Proxy')
+export function main(): void {
+	initConfig()
 
-	const app = initApp()
+	initLogger({ name: config.projectName })
 
-	registerProcessHandlers(app)
+	logger.info('Starting Smartlook Relay Proxy')
 
-	const port = config.get('proxy.port')
+	logger.debug(config, 'Config')
 
-	app.listen(port, () => {
-		logger.info(`Relay Proxy started on port ${port}`)
+	const server = initHTTPServer()
+
+	registerProcessHandlers(server)
+
+	const { port } = config
+
+	server.listen(port, () => {
+		logger.info(`Smartlook Relay Proxy running on port ${port}`)
 	})
 }
 

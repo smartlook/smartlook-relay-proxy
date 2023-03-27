@@ -26,7 +26,7 @@ install: ## install all dependencies
 
 .PHONY: dev
 dev: ## run TS (watch mode)
-	$(TSX) watch --clear-screen=false -r dotenv/config ./src/main.ts | $(PINO_PRETTY)
+	COMMIT_SHA="dev,$(COMMIT_SHA)" $(TSX) watch --clear-screen=false -r dotenv/config ./src/main.ts | $(PINO_PRETTY)
 
 .PHONY: run-js
 run-js: ## run built JS

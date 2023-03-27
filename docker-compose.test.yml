@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+    proxy:
+        container_name: proxy
+        build:
+            context: .
+            target: dev
+        volumes:
+            - ./src:/home/node/app/src:ro
+        ports:
+            - 9000:9000
+        environment:
+            NODE_ENV: development
+            LOGGER_LEVEL: trace
+            PROXY_PORT: 9000
+            WEB_SDK_HOST: https://web-sdk.alfa.smartlook.cloud
+            ASSETS_PROXY_HOST: https://assets-proxy.alfa.smartlook.cloud
+            WEB_SDK_WRITER_HOST: https://web-writer.alfa.smartlook.cloud
+            MOBILE_SDK_WRITER_HOST: https://sdk-writer.alfa.smartlook.cloud
+            MANAGER_HOST: https://manager.alfa.smartlook.cloud
+        labels:
+            - traefik.enable=true
+            - traefik.frontend.rule=Host:relay-proxy.dev.smartlook.cloud
+            - traefik.port=9000
+
+networks:
+    default:
+        name: smartlook-dev
+        external: true

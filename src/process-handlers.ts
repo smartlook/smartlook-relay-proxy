@@ -1,17 +1,18 @@
 import { Server } from 'http'
 
 import { logger } from './logger.js'
+import { stopHTTPServer } from './proxy/http-server.js'
 
-export const registerProcessHandlers = (app: Server): void => {
+export function registerProcessHandlers(server: Server): void {
 	logger.debug('Registering process handlers')
 
 	process.on('uncaughtException', (err) => {
-		logger.error(err, 'Uncaught exception')
+		logger.fatal(err, 'Uncaught exception')
 		process.emit('beforeExit', 1)
 	})
 
 	process.on('unhandledRejection', (err) => {
-		logger.error(err, 'Unhandled rejection')
+		logger.fatal(err, 'Unhandled rejection')
 		process.emit('beforeExit', 1)
 	})
 
@@ -22,19 +23,11 @@ export const registerProcessHandlers = (app: Server): void => {
 
 			logger.debug('Server started shutting down')
 
-			await new Promise<void>((resolve, reject) => {
-				app.close((err) => {
-					if (err) {
-						reject(err)
-					} else {
-						resolve()
-					}
-				})
-			})
+			await stopHTTPServer(server)
 
 			logger.debug('Server has been shut down')
 		} catch (e) {
-			logger.error(e, 'Error during beforeExit hook')
+			logger.fatal(e, 'Error during beforeExit hook')
 		} finally {
 			process.exit(code)
 		}
@@ -46,7 +39,7 @@ export const registerProcessHandlers = (app: Server): void => {
 	})
 
 	process.on('SIGINT', () => {
-		logger.debug('Received SIGTERM')
+		logger.debug('Received SIGINT')
 		process.emit('beforeExit', 0)
 	})
 

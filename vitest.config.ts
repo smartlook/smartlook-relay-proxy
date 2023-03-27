@@ -5,7 +5,8 @@ export default defineConfig({
 		include: ['./src/**/*.test.ts', './test/**/*.test.ts'],
 		env: {
 			NODE_ENV: 'test',
-			LOG_LEVEL: 'error',
+			LOGGER_LEVEL: 'error',
+			COMMIT_SHA: 'test',
 		},
 		globals: true,
 		restoreMocks: true,
@@ -13,6 +14,7 @@ export default defineConfig({
 		coverage: {
 			provider: 'c8',
 			include: ['src/**/*.ts'],
+			exclude: ['src/**/types.ts', 'src/**/*.test.ts'],
 			all: true,
 			lines: 80,
 			functions: 80,

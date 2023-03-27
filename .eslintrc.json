@@ -38,6 +38,8 @@
 		],
 		"object-shorthand": ["error", "always"],
 		"no-console": "error",
-		"@typescript-eslint/explicit-function-return-type": "error"
+		"func-style": ["error", "declaration"],
+		"@typescript-eslint/explicit-function-return-type": "error",
+		"@typescript-eslint/promise-function-async": "error"
 	}
 }
