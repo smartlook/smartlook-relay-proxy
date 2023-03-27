@@ -34,7 +34,7 @@ jobs:
               with:
                   images: |
                       'smartlook/relay-proxy'
-                      ${{ env.IMAGE_REGISTRY }}/relay-proxy
+                      ${{ env.IMAGE_REGISTRY }}/smartlook/relay-proxy
                   tags: |
                       type=ref,event=branch
                       type=ref,event=pr
