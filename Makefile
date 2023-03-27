@@ -81,7 +81,7 @@ build-ci: ## build TS (CI)
 	$(TSC) --build --force
 
 .PHONY: test-ci
-test-ci: test ## run tests (CI)
+test-ci: test-coverage ## run tests (CI)
 
 .PHONY: prettier-ci
 prettier-ci: ## run Prettier (CI)
