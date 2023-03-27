@@ -38,7 +38,7 @@
 		"eslint": "^8.36.0",
 		"husky": "^8.0.3",
 		"pino-pretty": "^10.0.0",
-		"prettier": "^2.8.4",
+		"prettier": "^2.8.7",
 		"tsc-watch": "^6.0.0",
 		"typescript": "^5.0.2"
 	}
