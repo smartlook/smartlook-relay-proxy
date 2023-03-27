@@ -10,7 +10,5 @@ export function initLogger({ name }: { name: string }): void {
 		level: config.logLevel,
 	})
 
-	logger.useLevelLabels = true
-
 	logger.debug('Logger initialized')
 }
