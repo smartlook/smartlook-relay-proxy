@@ -26,6 +26,7 @@ const configSchema = z.object({
 		.url()
 		.default('https://sdk-writer.eu.smartlook.cloud'),
 	managerHost: z.string().url().default('https://manager.eu.smartlook.cloud'),
+	undiciConnectTimeout: z.coerce.number().positive().default(30_000),
 })
 
 export let config: z.infer<typeof configSchema>
@@ -55,5 +56,6 @@ export function initConfig(): void {
 		webSdkWriterHost: process.env['WEB_SDK_WRITER_HOST'],
 		mobileSdkWriterHost: process.env['MOBILE_SDK_WRITER_HOST'],
 		managerHost: process.env['MANAGER_HOST'],
+		undiciConnectTimeout: process.env['UNDICI_CONNECT_TIMEOUT'],
 	})
 }

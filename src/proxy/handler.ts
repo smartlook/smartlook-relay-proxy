@@ -3,6 +3,7 @@ import { IncomingMessage, ServerResponse } from 'http'
 
 import undici from 'undici'
 
+import { config } from '../config.js'
 import { logger } from '../logger.js'
 
 import { internalError } from './internal-error.js'
@@ -11,7 +12,11 @@ import { statusRoute } from './routes/status-route.js'
 import type { IStreamOpaque, RouteMapping } from './types.js'
 import { buildUrl, prepareHeaders } from './utils.js'
 
-undici.setGlobalDispatcher(new undici.Agent({ connect: { timeout: 30_000 } }))
+export function initUndiciDispatcher(): void {
+	undici.setGlobalDispatcher(
+		new undici.Agent({ connect: { timeout: config.undiciConnectTimeout } })
+	)
+}
 
 async function pipeResponse(
 	routeTargetHost: string,
@@ -66,7 +71,7 @@ async function pipeResponse(
 				outgoingHeaders,
 				err,
 			},
-			'Error while piping response. This is just a warning and you can safely ignore it, since Web SDK will retry the request later'
+			'Error while piping response. This is just a warning and you can safely ignore it, since Smartlook Web SDK will retry the request later'
 		)
 
 		internalError(res)
