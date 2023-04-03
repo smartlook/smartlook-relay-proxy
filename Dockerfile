@@ -76,7 +76,7 @@ FROM node-distroless as final
 
 ARG COMMIT_SHA
 
-ENV NODE_OPTIONS="--enable-source-maps"
+ENV NODE_OPTIONS="--enable-source-maps --dns-result-order=ipv4first"
 ENV NODE_ENV="production"
 ENV COMMIT_SHA=${COMMIT_SHA}
 
