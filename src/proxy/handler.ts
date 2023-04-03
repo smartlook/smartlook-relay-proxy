@@ -1,13 +1,17 @@
+/* eslint-disable import/no-named-as-default-member */
 import { IncomingMessage, ServerResponse } from 'http'
 
 import undici from 'undici'
 
 import { logger } from '../logger.js'
 
+import { internalError } from './internal-error.js'
 import { notFoundRoute } from './routes/not-found-route.js'
 import { statusRoute } from './routes/status-route.js'
 import type { IStreamOpaque, RouteMapping } from './types.js'
 import { buildUrl, prepareHeaders } from './utils.js'
+
+undici.setGlobalDispatcher(new undici.Agent({ connect: { timeout: 30_000 } }))
 
 async function pipeResponse(
 	routeTargetHost: string,
@@ -23,38 +27,50 @@ async function pipeResponse(
 		req.socket.remoteAddress
 	)
 
-	// eslint-disable-next-line import/no-named-as-default-member
-	await undici.stream(
-		url,
-		{
-			opaque: { url, res, outgoingHeaders },
-			method: req.method as undici.Dispatcher.HttpMethod,
-			headers: outgoingHeaders,
-			// eslint-disable-next-line
-			body: (req.method === 'POST' ? req : undefined) as any,
-		},
-		({ headers: incomingHeaders, opaque, statusCode }) => {
-			const {
-				url: reqUrl,
-				res: rawRes,
-				outgoingHeaders: rawHeaders,
-			} = opaque as IStreamOpaque
-
-			logger.trace(
-				{
+	try {
+		await undici.stream(
+			url,
+			{
+				opaque: { url, res, outgoingHeaders },
+				method: req.method as undici.Dispatcher.HttpMethod,
+				headers: outgoingHeaders,
+				// eslint-disable-next-line
+				body: (req.method === 'POST' ? req : undefined) as any,
+			},
+			({ headers: incomingHeaders, opaque, statusCode }) => {
+				const {
 					url: reqUrl,
+					res: rawRes,
 					outgoingHeaders: rawHeaders,
-					incomingHeaders,
-					statusCode,
-				},
-				'Piping response'
-			)
+				} = opaque as IStreamOpaque
 
-			rawRes.writeHead(statusCode, incomingHeaders)
+				logger.trace(
+					{
+						url: reqUrl,
+						outgoingHeaders: rawHeaders,
+						incomingHeaders,
+						statusCode,
+					},
+					'Piping response'
+				)
 
-			return rawRes
-		}
-	)
+				rawRes.writeHead(statusCode, incomingHeaders)
+
+				return rawRes
+			}
+		)
+	} catch (err) {
+		logger.warn(
+			{
+				url,
+				outgoingHeaders,
+				err,
+			},
+			'Error while piping response. This is just a warning and you can safely ignore it, since Web SDK will retry the request later'
+		)
+
+		internalError(res)
+	}
 }
 
 export async function handler(
