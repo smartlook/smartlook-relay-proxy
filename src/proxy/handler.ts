@@ -1,5 +1,5 @@
 /* eslint-disable import/no-named-as-default-member */
-import { IncomingMessage, ServerResponse } from 'http'
+import { IncomingMessage, ServerResponse, type IncomingHttpHeaders } from 'http'
 
 import undici from 'undici'
 
@@ -65,17 +65,41 @@ async function pipeResponse(
 			}
 		)
 	} catch (err) {
+		handleStreamError(url, outgoingHeaders, res, err)
+	}
+}
+
+function handleStreamError(
+	url: string,
+	outgoingHeaders: IncomingHttpHeaders,
+	res: ServerResponse,
+	err: unknown
+): void {
+	if (
+		err &&
+		(err as Record<string, unknown>)['code'] === 'ECONNRESET' &&
+		(err as Record<string, unknown>)['message'] === 'aborted'
+	) {
+		logger.debug(
+			{
+				url,
+				outgoingHeaders,
+				err,
+			},
+			'Request aborted by the client. Smartlook Web SDK will retry the request later'
+		)
+	} else {
 		logger.warn(
 			{
 				url,
 				outgoingHeaders,
 				err,
 			},
-			'Error while piping response. This is just a warning and you can safely ignore it, since Smartlook Web SDK will retry the request later'
+			'Request could not be satisfied. This is just a warning and you can safely ignore it, since Smartlook Web SDK will retry the request later'
 		)
-
-		internalError(res)
 	}
+
+	internalError(res)
 }
 
 export async function handler(
