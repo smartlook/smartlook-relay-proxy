@@ -1,8 +1,6 @@
 # Smartlook Relay Proxy
 
-This service relays HTTP requests from your subdomain to
-Smartlook's recording domains, allowing you to bypass potential
-browser settings or extensions used by your visitors configured to limit data capture.
+The Smartlook relay proxy relays HTTP requests from your subdomain to Smartlook's recording domains, allow you to bypass potential browser settings or extensions configured to limit data capture.
 
 > **Note**
 > Only web recording is currently supported.
@@ -14,7 +12,7 @@ browser settings or extensions used by your visitors configured to limit data ca
 
 Images are available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-proxy) and [GitHub Packages](https://github.com/smartlook/smartlook-relay-proxy/pkgs/container/relay-proxy).
 
-1. Run the image and configure environment variables according to your needs.  
+1. Run the image and configure environment variables to your needs.  
    **All variables are optional, default values are listed in the table below**.
 
 ```bash
@@ -28,9 +26,9 @@ docker run --name="smartlook-relay-proxy" -d \
   smartlook/relay-proxy:latest # or smartlook/relay-proxy:<version>
 ```
 
-2. Create a new subdomain (e.g. `sl.yourdomain.com`) and point it to the container.
+2. Create a subdomain and point it to the container. It is best to use a subdomain of your website's domain.
 
-3. Replace URLs in Smartlook script and fill in your project key:
+3. Deploy the following script. Be sure to replace any URLs with your own URLs. Do not set `region`:
 
 ```diff
 <script>
@@ -52,24 +50,25 @@ docker run --name="smartlook-relay-proxy" -d \
 </script>
 ```
 
-4. You're done! Visit your site and check the network tab to make sure the requests are sent through your subdomain.
+You have now installed and deployed the Smartlook relay proxy. You can check if the relay proxy is working correctly by seeing requests sent through your subdomain in the Network tab of your browser DevTools.
    ![network tab screenshot](https://raw.githubusercontent.com/smartlook/smartlook-relay-proxy/main/network.png)
 
 ## Environment variables
+All variables are optional. Default values are listed in the table:
 
-| Name                  | Type     | Default value                           | Description                                                         |
-| --------------------- | -------- | --------------------------------------- | ------------------------------------------------------------------- |
-| `LOGGER_LEVEL`        | `string` | `info`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent` |
-| `PROXY_PORT`          | `number` | `8000`                                  | Port which will the HTTP server listen on                           |
-| `MANAGER_HOST`        | `string` | `https://manager.eu.smartlook.cloud`    | Smartlook Manager host                                              |
-| `WEB_SDK_WRITER_HOST` | `string` | `https://web-writer.eu.smartlook.cloud` | Smartlook Web Writer host                                           |
-| `ASSETS_PROXY_HOST`   | `string` | `https://assets-proxy.smartlook.cloud`  | Smartlook Assets Proxy host                                         |
+| Name                  | Type     | Default value                           | Description                                                         | Notes              |
+| --------------------- | -------- | --------------------------------------- | ------------------------------------------------------------------- |--------------------|
+| `LOGGER_LEVEL`        | `string` | `info`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent` | Can be overridden |
+| `PROXY_PORT`          | `number` | `8000`                                  | Port which will the HTTP server listen on                           | Can be overriden |
+| `MANAGER_HOST`        | `string` | `https://manager.eu.smartlook.cloud`    | Smartlook Manager host                                              | Only edit this value if using a region other than EU, or if instructed by customer support |
+| `WEB_SDK_WRITER_HOST` | `string` | `https://web-writer.eu.smartlook.cloud` | Smartlook Web Writer host                                           | Only edit this value if using a region other than EU, or if instructed by customer support |
+| `ASSETS_PROXY_HOST`   | `string` | `https://assets-proxy.smartlook.cloud`  | Smartlook Assets Proxy host                                         | Only edit this value if using a region other than EU, or if instructed by customer support |
 
 ## Regional data storage setup
 
-If your Smartlook organization is set up to store data in a different region than EU, you must set the environment variables accordingly.
+If your Smartlook organization is set up to store data in a region other than the EU, you must set the environment variables based on your location.
 
-Example configuration for US region:
+Example environment variables if based in the US:
 
 | Name                  | Value                                     |
 | --------------------- | ----------------------------------------- |
