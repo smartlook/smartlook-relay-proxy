@@ -1,5 +1,6 @@
+import { EnveyValidationError } from 'envey'
+
 import { config, initConfig } from './config.js'
-import { ConfigError } from './errors/index.js'
 
 describe('Config', () => {
 	it('Should initialize config', () => {
@@ -19,7 +20,7 @@ describe('Config', () => {
 		initConfig()
 
 		expect(config).toBeDefined()
-		expect(config.projectName).toBe('smartlook-relay-proxy')
+		expect(config.appName).toBe('smartlook-relay-proxy')
 		expect(config.port).toBe(8000)
 		expect(config.webSdkHost).toBe('https://web-sdk.smartlook.com')
 		expect(config.assetsProxyHost).toBe(
@@ -42,8 +43,7 @@ describe('Config', () => {
 
 			assert(false, 'Should throw error by now')
 		} catch (err) {
-			if (err instanceof ConfigError) {
-				expect(err.isOperational).toBe(false)
+			if (err instanceof EnveyValidationError) {
 				expect(err.issues.length).toBeGreaterThanOrEqual(1)
 				expect(err.issues[0]).toHaveProperty('received')
 				expect(err.issues[0]).toHaveProperty('code')

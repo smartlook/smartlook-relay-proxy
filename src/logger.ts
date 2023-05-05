@@ -4,11 +4,13 @@ import { config } from './config.js'
 
 export let logger: pino.Logger
 
-export function initLogger({ name }: { name: string }): void {
+export function initLogger(): void {
+	const { appName, logLevel } = config
+
 	logger = pino({
-		name,
-		level: config.logLevel,
+		name: appName,
+		level: logLevel,
 	})
 
-	logger.debug('Logger initialized')
+	logger.debug({ logLevel, appName }, 'Logger initialized')
 }

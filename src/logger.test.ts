@@ -9,15 +9,15 @@ describe('Logger', () => {
 	})
 
 	it('Should initialize logger', () => {
-		initLogger({ name: 'test-name' })
+		initLogger()
 
 		expect(logger).toBeDefined()
 		expectTypeOf(logger).toEqualTypeOf<Logger>()
 	})
 
 	it('Should not fail when initialized twice', () => {
-		initLogger({ name: 'test-name' })
-		initLogger({ name: 'test-name' })
+		initLogger()
+		initLogger()
 
 		expect(logger).toBeDefined()
 		expectTypeOf(logger).toEqualTypeOf<Logger>()

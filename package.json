@@ -11,17 +11,17 @@
 		"pnpm": ">=8"
 	},
 	"dependencies": {
-		"fast-json-stringify": "5.7.0",
+		"@fastify/http-proxy": "9.1.0",
+		"envey": "1.1.0",
+		"fastify": "4.17.0",
+		"gracy": "1.0.2",
 		"pino": "8.11.0",
-		"undici": "5.21.0",
 		"zod": "3.21.4"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "17.5.1",
 		"@commitlint/config-conventional": "17.4.4",
-		"@types/convict": "6.1.1",
 		"@types/node": "18.15.11",
-		"@types/supertest": "2.0.12",
 		"@typescript-eslint/eslint-plugin": "5.57.0",
 		"@typescript-eslint/parser": "5.57.0",
 		"@vitest/coverage-c8": "0.29.8",
@@ -35,8 +35,6 @@
 		"lint-staged": "13.2.0",
 		"pino-pretty": "10.0.0",
 		"prettier": "2.8.7",
-		"supertest": "6.3.3",
-		"tsc-watch": "6.0.0",
 		"tsx": "3.12.6",
 		"typescript": "5.0.3",
 		"vitest": "0.29.8"
