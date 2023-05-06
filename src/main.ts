@@ -20,11 +20,9 @@ export async function main(): Promise<void> {
 		await server.close()
 	})
 
-	const { port } = config
+	await server.listen({ port: config.port, host: '0.0.0.0' })
 
-	await server.listen({ port, host: '0.0.0.0' })
-
-	logger.info(`Smartlook Relay Proxy running on port ${port}`)
+	logger.info('Smartlook Relay Proxy started')
 }
 
 void main()

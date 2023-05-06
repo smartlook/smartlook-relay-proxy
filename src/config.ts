@@ -1,6 +1,13 @@
 import { createConfig, type EnveySchema, type InferEnveyConfig } from 'envey'
 import { z } from 'zod'
 
+function bool(defaultValue: boolean): z.ZodBoolean {
+	return z
+		.enum(['true', 'false'])
+		.transform((value) => value === 'true')
+		.default(defaultValue.toString() as never) as unknown as z.ZodBoolean
+}
+
 const configSchema = {
 	nodeEnv: {
 		env: 'NODE_ENV',
@@ -12,15 +19,19 @@ const configSchema = {
 		env: 'LOGGER_LEVEL',
 		format: z
 			.enum([
-				'fatal',
-				'error',
-				'warn',
-				'info',
-				'debug',
-				'trace',
+				'fatal', // 60
+				'error', // 50
+				'warn', // 40
+				'info', // 30
+				'debug', // 20
+				'trace', // 10
 				'silent',
 			])
 			.default('info'),
+	},
+	logRequests: {
+		env: 'LOG_REQUESTS',
+		format: bool(false),
 	},
 	commitSha: {
 		env: 'COMMIT_SHA',
@@ -65,7 +76,7 @@ const configSchema = {
 	},
 	trustProxy: {
 		env: 'TRUST_PROXY',
-		format: z.boolean().default(true),
+		format: bool(true),
 	},
 } satisfies EnveySchema
 

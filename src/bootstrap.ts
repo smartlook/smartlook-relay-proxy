@@ -10,7 +10,7 @@ export async function bootstrap(): Promise<FastifyInstance> {
 	const server = fastify({
 		logger,
 		trustProxy: config.trustProxy,
-		disableRequestLogging: config.nodeEnv !== 'development',
+		disableRequestLogging: !config.logRequests,
 	})
 
 	server.route({
@@ -29,6 +29,7 @@ export async function bootstrap(): Promise<FastifyInstance> {
 	for (const { targetHost, prefix } of getRouteMappings()) {
 		promises.push(
 			server.register(fastifyHttpProxy, {
+				disableRequestLogging: !config.logRequests,
 				upstream: targetHost,
 				prefix,
 				http2: false,
