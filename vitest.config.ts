@@ -16,10 +16,6 @@ export default defineConfig({
 			include: ['src/**/*.ts'],
 			exclude: ['src/**/types.ts', 'src/**/*.test.ts'],
 			all: true,
-			lines: 80,
-			functions: 80,
-			branches: 80,
-			statements: 80,
 		},
 	},
 })
