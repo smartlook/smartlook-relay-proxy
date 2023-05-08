@@ -4,22 +4,22 @@ import { initConfig } from './config.js'
 import { logger, initLogger } from './logger.js'
 
 describe('Logger', () => {
-	beforeEach(() => {
-		initConfig()
-	})
+    beforeEach(() => {
+        initConfig()
+    })
 
-	it('Should initialize logger', () => {
-		initLogger()
+    it('Should initialize logger', () => {
+        initLogger()
 
-		expect(logger).toBeDefined()
-		expectTypeOf(logger).toEqualTypeOf<Logger>()
-	})
+        expect(logger).toBeDefined()
+        expectTypeOf(logger).toEqualTypeOf<Logger>()
+    })
 
-	it('Should not fail when initialized twice', () => {
-		initLogger()
-		initLogger()
+    it('Should not fail when initialized twice', () => {
+        initLogger()
+        initLogger()
 
-		expect(logger).toBeDefined()
-		expectTypeOf(logger).toEqualTypeOf<Logger>()
-	})
+        expect(logger).toBeDefined()
+        expectTypeOf(logger).toEqualTypeOf<Logger>()
+    })
 })

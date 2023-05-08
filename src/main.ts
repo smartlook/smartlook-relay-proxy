@@ -5,24 +5,24 @@ import { initConfig, config } from './config.js'
 import { initLogger, logger } from './logger.js'
 
 export async function main(): Promise<void> {
-	initConfig()
-	initLogger()
+    initConfig()
+    initLogger()
 
-	logger.info('Starting Smartlook Relay Proxy')
+    logger.info('Starting Smartlook Relay Proxy')
 
-	logger.debug(config, 'Config')
+    logger.debug(config, 'Config')
 
-	const server = await bootstrap()
+    const server = await bootstrap()
 
-	onExit({ logger }, async () => {
-		logger.info('Shutting down Smartlook Relay Proxy')
+    onExit({ logger }, async () => {
+        logger.info('Shutting down Smartlook Relay Proxy')
 
-		await server.close()
-	})
+        await server.close()
+    })
 
-	await server.listen({ port: config.port, host: '0.0.0.0' })
+    await server.listen({ port: config.port, host: '0.0.0.0' })
 
-	logger.info('Smartlook Relay Proxy started')
+    logger.info('Smartlook Relay Proxy started')
 }
 
 void main()

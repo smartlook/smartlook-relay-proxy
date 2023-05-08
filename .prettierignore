@@ -1,4 +1,6 @@
 node_modules
 build
 coverage
+cache
+.husky
 pnpm-lock.yaml
