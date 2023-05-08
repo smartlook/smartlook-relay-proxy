@@ -24,10 +24,10 @@ export async function bootstrap(): Promise<FastifyInstance> {
 		},
 	})
 
-	const promises = []
+	const registerProxies = []
 
 	for (const { targetHost, prefix } of getRouteMappings()) {
-		promises.push(
+		registerProxies.push(
 			server.register(fastifyHttpProxy, {
 				disableRequestLogging: !config.logRequests,
 				upstream: targetHost,
@@ -46,7 +46,7 @@ export async function bootstrap(): Promise<FastifyInstance> {
 		)
 	}
 
-	await Promise.all(promises)
+	await Promise.all(registerProxies)
 
 	return server
 }
