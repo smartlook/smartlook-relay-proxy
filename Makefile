@@ -12,6 +12,9 @@ HUSKY			:= $(NPM_BIN)/husky
 
 COMMIT_SHA		:= $(shell git rev-parse HEAD)
 
+ESLINT_CACHE	:= ./cache/.eslintcache
+PRETTIER_CACHE	:= ./cache/.prettiercache
+
 .PHONY: help
 ## Display this help
 help:
@@ -39,6 +42,11 @@ build: ## build TS
 	rm -rf ./build
 	$(TSC) --build --force
 
+.PHONY: build-prod
+build-prod: ## build TS (for production)
+	rm -rf ./build
+	$(TSC) --project ./tsconfig.prod.json
+
 .PHONY: build-image
 build-image: ## build Docker image (args=<build args>, tag=<string>)
 	docker build $(or $(args), --build-arg COMMIT_SHA='dev,$(COMMIT_SHA)') -t $(or $(tag), $(PROJECT_NAME)) . -f ./Dockerfile
@@ -61,11 +69,11 @@ test-coverage: ## run tests (with coverage)
 
 .PHONY: prettier
 prettier: ## run Prettier (autofix)
-	$(PRETTIER) --cache --write .
+	$(PRETTIER) --cache --cache-location=$(PRETTIER_CACHE) --write .
 
 .PHONY: eslint
 eslint: ## run ESLint (autofix)
-	$(ESLINT) --max-warnings 0 --cache --fix .
+	$(ESLINT) --max-warnings 0 --cache --cache-location $(ESLINT_CACHE) --fix .
 
 .PHONY: lint
 lint: prettier eslint ## run Prettier & ESlint (autofix)

@@ -1,26 +1,28 @@
-import { config, initConfig } from './config.js'
+import { onExit } from 'gracy'
+
+import { bootstrap } from './bootstrap.js'
+import { initConfig, config } from './config.js'
 import { initLogger, logger } from './logger.js'
-import { registerProcessHandlers } from './process-handlers.js'
-import { initHTTPServer } from './proxy/http-server.js'
 
-export function main(): void {
-	initConfig()
+export async function main(): Promise<void> {
+    initConfig()
+    initLogger()
 
-	initLogger({ name: config.projectName })
+    logger.info('Starting Smartlook Relay Proxy')
 
-	logger.info('Starting Smartlook Relay Proxy')
+    logger.debug(config, 'Config')
 
-	logger.debug(config, 'Config')
+    const server = await bootstrap()
 
-	const server = initHTTPServer()
+    onExit({ logger }, async () => {
+        logger.info('Shutting down Smartlook Relay Proxy')
 
-	registerProcessHandlers(server)
+        await server.close()
+    })
 
-	const { port } = config
+    await server.listen({ port: config.port, host: '0.0.0.0' })
 
-	server.listen(port, () => {
-		logger.info(`Smartlook Relay Proxy running on port ${port}`)
-	})
+    logger.info('Smartlook Relay Proxy started')
 }
 
-main()
+void main()

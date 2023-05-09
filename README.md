@@ -18,14 +18,9 @@ Images are available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-pr
    **All variables are optional, default values are listed in the table below**.
 
 ```bash
-docker run --name="smartlook-relay-proxy" -d \
-  # can be also set with "--env-file"
-  -e LOGGER_LEVEL=<level> \
-  -e MANAGER_HOST=<host> \
-  -e WEB_SDK_WRITER_HOST=<host> \
-  -e ASSETS_PROXY_HOST=<host> \
-  -p <port>:8000 \  # internally runs on port 8000
-  smartlook/relay-proxy:latest # or smartlook/relay-proxy:<version>
+docker run --name="smartlook-relay-proxy" \
+  -p <port>:8000 \  # runs on port 8000 by default
+  smartlook/relay-proxy:latest
 ```
 
 2. Create a new subdomain (e.g. `sl.yourdomain.com`) and point it to the container.
@@ -57,13 +52,15 @@ docker run --name="smartlook-relay-proxy" -d \
 
 ## Environment variables
 
-| Name                  | Type     | Default value                           | Description                                                         |
-| --------------------- | -------- | --------------------------------------- | ------------------------------------------------------------------- |
-| `LOGGER_LEVEL`        | `string` | `info`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent` |
-| `PROXY_PORT`          | `number` | `8000`                                  | Port which will the HTTP server listen on                           |
-| `MANAGER_HOST`        | `string` | `https://manager.eu.smartlook.cloud`    | Smartlook Manager host                                              |
-| `WEB_SDK_WRITER_HOST` | `string` | `https://web-writer.eu.smartlook.cloud` | Smartlook Web Writer host                                           |
-| `ASSETS_PROXY_HOST`   | `string` | `https://assets-proxy.smartlook.cloud`  | Smartlook Assets Proxy host                                         |
+| Name                  | Type      | Default value                           | Description                                                                                        |
+| --------------------- | --------- | --------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `LOGGER_LEVEL`        | `string`  | `info`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent`                                |
+| `PROXY_PORT`          | `number`  | `8000`                                  | Port which will the HTTP server listen on                                                          |
+| `MANAGER_HOST`        | `string`  | `https://manager.eu.smartlook.cloud`    | Smartlook Manager host                                                                             |
+| `WEB_SDK_WRITER_HOST` | `string`  | `https://web-writer.eu.smartlook.cloud` | Smartlook Web Writer host                                                                          |
+| `ASSETS_PROXY_HOST`   | `string`  | `https://assets-proxy.smartlook.cloud`  | Smartlook Assets Proxy host                                                                        |
+| `LOG_REQUESTS`        | `boolean` | `false`                                 | Log all requests (useful for debugging)                                                            |
+| `TRUST_PROXY`         | `boolean` | `true`                                  | See Fastify's [trustProxy](https://www.fastify.io/docs/latest/Reference/Server/#trustproxy) option |
 
 ## Regional data storage setup
 
