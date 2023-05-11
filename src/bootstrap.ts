@@ -1,5 +1,5 @@
 import { fastifyHttpProxy } from '@fastify/http-proxy'
-import { fastify, type FastifyInstance } from 'fastify'
+import { fastify, type FastifyInstance, type FastifyRequest } from 'fastify'
 
 import { config } from './config.js'
 import { rewriteRequestHeaders } from './http/headers.js'
@@ -35,11 +35,11 @@ export async function bootstrap(): Promise<FastifyInstance> {
                 http2: false,
                 replyOptions: {
                     rewriteRequestHeaders: (request, headers) => {
-                        return rewriteRequestHeaders(
+                        return rewriteRequestHeaders({
+                            request: request as FastifyRequest,
                             headers,
-                            request.ip,
-                            targetHost.replace('https://', '')
-                        )
+                            host: targetHost.replace('https://', ''),
+                        })
                     },
                 },
             })
