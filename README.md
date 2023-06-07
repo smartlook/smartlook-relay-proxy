@@ -104,7 +104,7 @@ Smartlook servers are located in four regions:
 
 Smartlook offers two regions for data storage: **EU** and **US**. Note that this is different from the region-specific setup described above, which only affects the network latency, but not the data storage location.
 
-**By default, all data is stored in the EU**. However, if your Smartlook organization is set up to store data in US (you must contact Smartlook support to set it up), you need to set the environment variables as described [above](#north-america).
+**By default, all data is stored in the EU**. However, if your Smartlook organization is set up to store data in US (you must contact Smartlook support to set it up), you need to set the environment variables as described in region-specific setup [above](#north-america).
 
 ## Development
 
