@@ -1,19 +1,19 @@
-PROJECT_NAME	:= smartlook-relay-proxy
+PROJECT_NAME := smartlook-relay-proxy
 
-NPM_BIN			:= ./node_modules/.bin
+NPM_BIN := ./node_modules/.bin
 
-TSC				:= $(NPM_BIN)/tsc
-TSX				:= $(NPM_BIN)/tsx
-VITEST			:= $(NPM_BIN)/vitest
-PRETTIER		:= $(NPM_BIN)/prettier
-ESLINT			:= $(NPM_BIN)/eslint
-PINO_PRETTY		:= $(NPM_BIN)/pino-pretty
-HUSKY			:= $(NPM_BIN)/husky
+TSC := $(NPM_BIN)/tsc
+TSX := $(NPM_BIN)/tsx
+VITEST := $(NPM_BIN)/vitest
+PRETTIER := $(NPM_BIN)/prettier
+ESLINT := $(NPM_BIN)/eslint
+PINO_PRETTY := $(NPM_BIN)/pino-pretty
+HUSKY := $(NPM_BIN)/husky
 
-COMMIT_SHA		:= $(shell git rev-parse HEAD)
+COMMIT_SHA := dev,$(shell git rev-parse HEAD)
 
-ESLINT_CACHE	:= ./cache/.eslintcache
-PRETTIER_CACHE	:= ./cache/.prettiercache
+ESLINT_CACHE := ./cache/.eslintcache
+PRETTIER_CACHE := ./cache/.prettiercache
 
 .PHONY: help
 ## Display this help
@@ -29,7 +29,7 @@ install: ## install all dependencies
 
 .PHONY: dev
 dev: ## run TS (watch mode)
-	COMMIT_SHA="dev,$(COMMIT_SHA)" $(TSX) watch --clear-screen=false -r dotenv/config ./src/main.ts | $(PINO_PRETTY)
+	COMMIT_SHA="$(COMMIT_SHA)" $(TSX) watch --clear-screen=false -r dotenv/config ./src/main.ts | $(PINO_PRETTY)
 
 .PHONY: run-js
 run-js: ## run built JS
@@ -49,7 +49,7 @@ build-prod: ## build TS (for production)
 
 .PHONY: build-image
 build-image: ## build Docker image (args=<build args>, tag=<string>)
-	docker build $(or $(args), --build-arg COMMIT_SHA='dev,$(COMMIT_SHA)') -t $(or $(tag), $(PROJECT_NAME)) . -f ./Dockerfile
+	docker build $(or $(args), --build-arg COMMIT_SHA="$(COMMIT_SHA)") -t $(or $(tag), $(PROJECT_NAME)) . -f ./Dockerfile
 
 ##@ Test
 
