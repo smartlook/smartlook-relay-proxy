@@ -56,23 +56,55 @@ docker run --name="smartlook-relay-proxy" \
 | --------------------- | --------- | --------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `LOGGER_LEVEL`        | `string`  | `info`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent`                                |
 | `PROXY_PORT`          | `number`  | `8000`                                  | Port which will the HTTP server listen on                                                          |
+| `WEB_SDK_HOST`        | `string`  | `https://web-sdk.smartlook.com`         | Smartlook Web SDK host                                                                             |
 | `MANAGER_HOST`        | `string`  | `https://manager.eu.smartlook.cloud`    | Smartlook Manager host                                                                             |
 | `WEB_SDK_WRITER_HOST` | `string`  | `https://web-writer.eu.smartlook.cloud` | Smartlook Web Writer host                                                                          |
 | `ASSETS_PROXY_HOST`   | `string`  | `https://assets-proxy.smartlook.cloud`  | Smartlook Assets Proxy host                                                                        |
 | `LOG_REQUESTS`        | `boolean` | `false`                                 | Log all requests (useful for debugging)                                                            |
 | `TRUST_PROXY`         | `boolean` | `true`                                  | See Fastify's [trustProxy](https://www.fastify.io/docs/latest/Reference/Server/#trustproxy) option |
 
-## Regional data storage setup
+## Region-specific setup
 
-If your Smartlook organization is set up to store data in a different region than EU, you must set the environment variables accordingly.
+Smartlook servers are located in four regions:
 
-Example configuration for US region:
+1. EU (Frankfurt)
+1. North America (Oregon)
+1. South America (São Paulo)
+1. Asia (Singapore)
+
+**By default, all requests are sent to the EU region**. If most of your visitors are located in a different region and you want to reduce the network latency, you can set the following environment variables to point to the region closest to your visitors. **Note that this will only affect the network latency, not the data storage location**. For more information about data storage, see the [Regional data storage setup](#regional-data-storage-setup) section below.
+
+#### North America
 
 | Name                  | Value                                     |
 | --------------------- | ----------------------------------------- |
 | `MANAGER_HOST`        | `https://manager.us.smartlook.cloud`      |
 | `WEB_SDK_WRITER_HOST` | `https://web-writer.us.smartlook.cloud`   |
 | `ASSETS_PROXY_HOST`   | `https://assets-proxy.us.smartlook.cloud` |
+
+#### South America
+
+> **Note**
+> For this region, only the `WEB_SDK_WRITER_HOST` is available.
+
+| Name                  | Value                                   |
+| --------------------- | --------------------------------------- |
+| `WEB_SDK_WRITER_HOST` | `https://web-writer.br.smartlook.cloud` |
+
+#### Asia
+
+> **Note**
+> For this region, only the `WEB_SDK_WRITER_HOST` is available.
+
+| Name                  | Value                                   |
+| --------------------- | --------------------------------------- |
+| `WEB_SDK_WRITER_HOST` | `https://web-writer.sg.smartlook.cloud` |
+
+### Regional data storage setup
+
+Smartlook offers two regions for data storage: **EU** and **US**. Note that this is different from the region-specific setup described above, which only affects the network latency, but not the data storage location.
+
+**By default, all data is stored in the EU**. However, if your Smartlook organization is set up to store data in US (you must contact Smartlook support to set it up), you need to set the environment variables as described [above](#north-america).
 
 ## Development
 
