@@ -23,7 +23,8 @@ docker run --name="smartlook-relay-proxy" \
   smartlook/relay-proxy:latest
 ```
 
-2. Create a new subdomain (e.g. `sl.yourdomain.com`) and point it to the container.
+2. Create a new subdomain (e.g. `sl.yourdomain.com`) and point it to the Relay proxy.
+   The ideal setup would be to use a reverse proxy (Nginx, Traefik, Caddy etc.), which would forward all requests to the Relay proxy.
 
 3. Replace URLs in Smartlook script and fill in your project key:
 
