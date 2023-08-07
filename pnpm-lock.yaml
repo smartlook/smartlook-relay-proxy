@@ -9,8 +9,8 @@ dependencies:
     specifier: 9.2.1
     version: 9.2.1
   envey:
-    specifier: 1.1.0
-    version: 1.1.0(zod@3.21.4)
+    specifier: 1.2.0
+    version: 1.2.0(zod@3.21.4)
   fastify:
     specifier: 4.21.0
     version: 4.21.0
@@ -1653,8 +1653,8 @@ packages:
       tapable: 2.2.1
     dev: true
 
-  /envey@1.1.0(zod@3.21.4):
-    resolution: {integrity: sha512-GW4NwArevOjnPkQsqan8/piFMwQacKv8tEAAA55VApnjuU0aZc323J33heNWFI3dx1WxEwKCnywWsss8pzy3vQ==}
+  /envey@1.2.0(zod@3.21.4):
+    resolution: {integrity: sha512-n/i9v9FhNSfpdBMFjAh+CDtAIWMA0AiHVnY+LB4Cqe4mjY8CJB+5UFG4nDuBHDaBoSejuIXONwUwjKMR72TmrA==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.0.0

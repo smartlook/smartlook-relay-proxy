@@ -12,7 +12,7 @@
     },
     "dependencies": {
         "@fastify/http-proxy": "9.2.1",
-        "envey": "1.1.0",
+        "envey": "1.2.0",
         "fastify": "4.21.0",
         "gracy": "1.0.2",
         "pino": "8.15.0",
