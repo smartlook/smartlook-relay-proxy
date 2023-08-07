@@ -5,13 +5,17 @@ import { config, initConfig } from '../config.js'
 import { rewriteRequestHeaders } from './headers.js'
 
 describe('HTTP server', () => {
-    const ip = '192.168.1.1'
+    const ip = '64.248.69.64'
     const host = 'example.com'
 
-    function getMockRequest(method?: HTTPMethods): FastifyRequest {
+    function getMockRequest(
+        method?: HTTPMethods,
+        headers?: Record<string, string | string[]>
+    ): FastifyRequest {
         return {
             ip,
-            ...(method && { method }),
+            method,
+            headers,
         } as FastifyRequest
     }
 
@@ -80,6 +84,48 @@ describe('HTTP server', () => {
         expect(headers).toEqual({
             ...originalHeaders,
             'x-forwarded-for': '127.0.0.1',
+            'x-forwarded-by': config.appName,
+            'x-forwarded-host': 'example.com',
+            host,
+        })
+    })
+
+    it('Should handle x-forwarded-for as an array', () => {
+        const originalHeaders = {
+            'x-forwarded-for': [
+                '91.69.97.18',
+                '100.254.100.215',
+                '162.157.33.117',
+            ],
+        }
+
+        const headers = rewriteRequestHeaders({
+            headers: originalHeaders,
+            request: getMockRequest('GET', originalHeaders),
+            host,
+        })
+
+        expect(headers).toEqual({
+            'x-forwarded-for': originalHeaders['x-forwarded-for'][0],
+            'x-forwarded-by': config.appName,
+            'x-forwarded-host': 'example.com',
+            host,
+        })
+    })
+
+    it.only('Should handle x-forwarded-for as a string array', () => {
+        const originalHeaders = {
+            'x-forwarded-for': '91.69.97.18, 100.254.100.215, 162.157.33.117',
+        }
+
+        const headers = rewriteRequestHeaders({
+            headers: originalHeaders,
+            request: getMockRequest('GET', originalHeaders),
+            host,
+        })
+
+        expect(headers).toEqual({
+            'x-forwarded-for': '91.69.97.18',
             'x-forwarded-by': config.appName,
             'x-forwarded-host': 'example.com',
             host,
