@@ -113,7 +113,7 @@ describe('HTTP server', () => {
         })
     })
 
-    it.only('Should handle x-forwarded-for as a string array', () => {
+    it('Should handle x-forwarded-for as a string array', () => {
         const originalHeaders = {
             'x-forwarded-for': '91.69.97.18, 100.254.100.215, 162.157.33.117',
         }

@@ -17,7 +17,7 @@ function parseIp(
                 ? xForwardedFor[0]
                 : xForwardedFor.includes(',')
                 ? xForwardedFor.split(',')[0]
-                : request.ip
+                : xForwardedFor
         }
 
         return request.ip
