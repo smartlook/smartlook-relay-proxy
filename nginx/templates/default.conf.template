@@ -13,7 +13,7 @@ server {
     access_log /dev/stdout combined if=$loggable;
 
     location /manager/ {
-        proxy_pass https://${MANAGER_HOST}/;
+        proxy_pass ${MANAGER_HOST}/;
 
         proxy_set_header Host ${MANAGER_HOST};
         proxy_set_header X-Forwarded-Host ${MANAGER_HOST};
@@ -28,7 +28,7 @@ server {
     }
 
     location /assets/ {
-        proxy_pass https://${ASSETS_PROXY_HOST}/;
+        proxy_pass ${ASSETS_PROXY_HOST}/;
 
         proxy_set_header Host ${ASSETS_PROXY_HOST};
         proxy_set_header X-Forwarded-Host ${ASSETS_PROXY_HOST};
@@ -43,7 +43,7 @@ server {
     }
 
     location /web-writer/ {
-        proxy_pass https://${WEB_SDK_WRITER_HOST}/;
+        proxy_pass ${WEB_SDK_WRITER_HOST}/;
 
         proxy_set_header Host ${WEB_SDK_WRITER_HOST};
         proxy_set_header X-Forwarded-Host ${WEB_SDK_WRITER_HOST};
@@ -58,7 +58,7 @@ server {
     }
 
     location /sdk-writer/ {
-        proxy_pass https://${MOBILE_SDK_WRITER_HOST}/;
+        proxy_pass ${MOBILE_SDK_WRITER_HOST}/;
 
         proxy_set_header Host ${MOBILE_SDK_WRITER_HOST};
         proxy_set_header X-Forwarded-Host ${MOBILE_SDK_WRITER_HOST};
@@ -73,7 +73,7 @@ server {
     }
 
     location / {
-        proxy_pass https://${WEB_SDK_HOST}/;
+        proxy_pass ${WEB_SDK_HOST}/;
 
         proxy_set_header Host ${WEB_SDK_HOST};
         proxy_set_header X-Forwarded-Host ${WEB_SDK_HOST};
