@@ -12,6 +12,12 @@ server {
     error_log /dev/stderr ${ERROR_LOG_LEVEL};
     access_log /dev/stdout combined if=$loggable;
 
+    location /proxy/status {
+        default_type application/json;
+
+        return 200 '{ "app": "smartlook-relay-proxy", "version": "${COMMIT_SHA}" }';
+    }
+
     location /manager/ {
         proxy_pass https://${MANAGER_HOST}/;
 
@@ -24,7 +30,7 @@ server {
 
         proxy_pass_header Server;
 
-        proxy_redirect off;
+        proxy_redirect default;
     }
 
     location /assets/ {
@@ -39,7 +45,7 @@ server {
         
         proxy_pass_header Server;
 
-        proxy_redirect off;
+        proxy_redirect default;
     }
 
     location /web-writer/ {
@@ -69,7 +75,7 @@ server {
         
         proxy_pass_header Server;
 
-        proxy_redirect off;
+        proxy_redirect default;
     }
 
     location / {
@@ -84,6 +90,6 @@ server {
         
         proxy_pass_header Server;
 
-        proxy_redirect off;
+        proxy_redirect default;
     }
 }

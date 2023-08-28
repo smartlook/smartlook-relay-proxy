@@ -1,7 +1,10 @@
 FROM nginx:1-alpine
 
+ARG COMMIT_SHA="unknown"
+
 COPY ./nginx/templates /etc/nginx/templates
 
+ENV COMMIT_SHA=${COMMIT_SHA}
 ENV PROXY_PORT=8000
 ENV CLIENT_MAX_BODY_SIZE=20m
 ENV ERROR_LOG_LEVEL=error

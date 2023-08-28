@@ -54,16 +54,14 @@ You have now installed and deployed the Smartlook relay proxy. You can check if 
 
 ## Environment variables
 
-| Name                  | Type      | Default value                           | Description                                                                                        | Notes                                                                                      |
-| --------------------- | --------- | --------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `LOGGER_LEVEL`        | `string`  | `info`                                  | One of `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent`                                | Can be overridden                                                                          |
-| `PROXY_PORT`          | `number`  | `8000`                                  | Port which will the HTTP server listen on                                                          | Can be overridden                                                                          |
-| `WEB_SDK_HOST`        | `string`  | `https://web-sdk.smartlook.com`         | Smartlook Web SDK host                                                                             | Only edit this value if using a region other than EU, or if instructed by customer support |
-| `MANAGER_HOST`        | `string`  | `https://manager.eu.smartlook.cloud`    | Smartlook Manager host                                                                             | Only edit this value if using a region other than EU, or if instructed by customer support |
-| `WEB_SDK_WRITER_HOST` | `string`  | `https://web-writer.eu.smartlook.cloud` | Smartlook Web Writer host                                                                          | Only edit this value if using a region other than EU, or if instructed by customer support |
-| `ASSETS_PROXY_HOST`   | `string`  | `https://assets-proxy.smartlook.cloud`  | Smartlook Assets Proxy host                                                                        | Only edit this value if using a region other than EU, or if instructed by customer support |
-| `LOG_REQUESTS`        | `boolean` | `false`                                 | Log all requests (useful for debugging)                                                            |                                                                                            |
-| `TRUST_PROXY`         | `boolean` | `true`                                  | See Fastify's [trustProxy](https://www.fastify.io/docs/latest/Reference/Server/#trustproxy) option |                                                                                            |
+| Name                  | Type     | Default value                   | Description                                                                                                                                                     | Notes                                                                                      |
+| --------------------- | -------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `ERROR_LOG_LEVEL`     | `string` | `error`                         | [Nginx error log level](https://nginx.org/en/docs/ngx_core_module.html#error_log). One of `debug`, `info`, `notice`, `warn`, `error`, `crit`, `alert`, `emerg`. | Can be overridden                                                                          |
+| `PROXY_PORT`          | `number` | `8000`                          | Port which will the HTTP server listen on                                                                                                                       | Can be overridden                                                                          |
+| `WEB_SDK_HOST`        | `string` | `web-sdk.smartlook.com`         | Smartlook Web SDK host                                                                                                                                          | Only edit this value if using a region other than EU, or if instructed by customer support |
+| `MANAGER_HOST`        | `string` | `manager.eu.smartlook.cloud`    | Smartlook Manager host                                                                                                                                          | Only edit this value if using a region other than EU, or if instructed by customer support |
+| `WEB_SDK_WRITER_HOST` | `string` | `web-writer.eu.smartlook.cloud` | Smartlook Web Writer host                                                                                                                                       | Only edit this value if using a region other than EU, or if instructed by customer support |
+| `ASSETS_PROXY_HOST`   | `string` | `assets-proxy.smartlook.cloud`  | Smartlook Assets Proxy host                                                                                                                                     | Only edit this value if using a region other than EU, or if instructed by customer support |
 
 ## Regional setup
 
@@ -71,11 +69,11 @@ Smartlook offers two regions for data storage: EU and US. By default, all projec
 
 If your project is set to the US data region, you need to set the variables as follows:
 
-| Name                  | Value                                     |
-| --------------------- | ----------------------------------------- |
-| `MANAGER_HOST`        | `https://manager.us.smartlook.cloud`      |
-| `WEB_SDK_WRITER_HOST` | `https://web-writer.us.smartlook.cloud`   |
-| `ASSETS_PROXY_HOST`   | `https://assets-proxy.us.smartlook.cloud` |
+| Name                  | Value                             |
+| --------------------- | --------------------------------- |
+| `MANAGER_HOST`        | `manager.us.smartlook.cloud`      |
+| `WEB_SDK_WRITER_HOST` | `web-writer.us.smartlook.cloud`   |
+| `ASSETS_PROXY_HOST`   | `assets-proxy.us.smartlook.cloud` |
 
 If most of your visitors are located in a different region, you can set environment variables to reduce network latency. Smartlook servers are located in four regions:
 
@@ -91,20 +89,20 @@ To set up for other regions:
 > **Note**
 > For this region, only the `WEB_SDK_WRITER_HOST` is available.
 
-| Name                  | Value                                   |
-| --------------------- | --------------------------------------- |
-| `WEB_SDK_WRITER_HOST` | `https://web-writer.br.smartlook.cloud` |
+| Name                  | Value                           |
+| --------------------- | ------------------------------- |
+| `WEB_SDK_WRITER_HOST` | `web-writer.br.smartlook.cloud` |
 
 #### Asia
 
 > **Note**
 > For this region, only the `WEB_SDK_WRITER_HOST` is available.
 
-| Name                  | Value                                   |
-| --------------------- | --------------------------------------- |
-| `WEB_SDK_WRITER_HOST` | `https://web-writer.sg.smartlook.cloud` |
+| Name                  | Value                           |
+| --------------------- | ------------------------------- |
+| `WEB_SDK_WRITER_HOST` | `web-writer.sg.smartlook.cloud` |
 
-**By default, all data is stored in the EU**. However, if your Smartlook organization is set up to store data in US (you must contact Smartlook support to set it up), you need to set the environment variables as described in region-specific setup [above](#north-america).
+**By default, all data is stored in the EU**. However, if your Smartlook organization is set up to store data in US (you must contact Smartlook support to set it up), you need to set the environment variables as described in region-specific setup [above](#regional-setup).
 
 ## Development
 

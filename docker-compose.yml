@@ -8,7 +8,8 @@ services:
         ports:
             - 80:8000
         environment:
-            PORT: 8000
+            COMMIT_SHA: dev
+            PROXY_PORT: 8000
             CLIENT_MAX_BODY_SIZE: 20m
             ERROR_LOG_LEVEL: error
             WEB_SDK_HOST: web-sdk.smartlook.com

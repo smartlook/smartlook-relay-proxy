@@ -67,8 +67,6 @@ jobs:
                   push: true
                   provenance: false
                   build-args: |
-                      NODE_VERSION=${{ env.NODE_VERSION }}
-                      PNPM_VERSION=${{ env.PNPM_VERSION }}
                       COMMIT_SHA=${{ steps.git-meta.outputs.BRANCH_OR_TAG_NORMALIZED_WITH_SHA }}
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
