@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+    nginx:
+        image: nginx:1-alpine
+        container_name: nginx
+        restart: unless-stopped
+        ports:
+            - 80:8000
+        environment:
+            COMMIT_SHA: dev
+            PROXY_PORT: 8000
+            CLIENT_MAX_BODY_SIZE: 20m
+            ERROR_LOG_LEVEL: error
+            WEB_SDK_HOST: web-sdk.smartlook.com
+            MANAGER_HOST: manager.eu.smartlook.cloud
+            ASSETS_PROXY_HOST: assets-proxy.smartlook.cloud
+            WEB_SDK_WRITER_HOST: web-writer.eu.smartlook.cloud
+            MOBILE_SDK_WRITER_HOST: sdk-writer.eu.smartlook.cloud
+        volumes:
+            - ./nginx/templates:/etc/nginx/templates
+            - nginx_data:/etc/nginx
+
+volumes:
+    nginx_data:

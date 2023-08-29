@@ -4,3 +4,4 @@ coverage
 cache
 .husky
 pnpm-lock.yaml
+*.md

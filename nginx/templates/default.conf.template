@@ -1,0 +1,95 @@
+map $status $loggable {
+    ~^[23]  0;
+    default 1;
+}
+
+server {
+    listen ${PROXY_PORT};
+
+    server_tokens off;
+    client_max_body_size ${CLIENT_MAX_BODY_SIZE};
+
+    error_log /dev/stderr ${ERROR_LOG_LEVEL};
+    access_log /dev/stdout combined if=$loggable;
+
+    location /proxy/status {
+        default_type application/json;
+
+        return 200 '{ "app": "smartlook-relay-proxy", "version": "${COMMIT_SHA}" }';
+    }
+
+    location /manager/ {
+        proxy_pass https://${MANAGER_HOST}/;
+
+        proxy_set_header Host ${MANAGER_HOST};
+        proxy_set_header X-Forwarded-Host ${MANAGER_HOST};
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-By smartlook-relay-proxy;
+
+        proxy_pass_header Server;
+
+        proxy_redirect default;
+    }
+
+    location /assets/ {
+        proxy_pass https://${ASSETS_PROXY_HOST}/;
+
+        proxy_set_header Host ${ASSETS_PROXY_HOST};
+        proxy_set_header X-Forwarded-Host ${ASSETS_PROXY_HOST};
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-By smartlook-relay-proxy;
+        
+        proxy_pass_header Server;
+
+        proxy_redirect default;
+    }
+
+    location /web-writer/ {
+        proxy_pass https://${WEB_SDK_WRITER_HOST}/;
+
+        proxy_set_header Host ${WEB_SDK_WRITER_HOST};
+        proxy_set_header X-Forwarded-Host ${WEB_SDK_WRITER_HOST};
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-By smartlook-relay-proxy;
+
+        proxy_pass_header Server;
+        
+        proxy_redirect off;
+    }
+
+    location /sdk-writer/ {
+        proxy_pass https://${MOBILE_SDK_WRITER_HOST}/;
+
+        proxy_set_header Host ${MOBILE_SDK_WRITER_HOST};
+        proxy_set_header X-Forwarded-Host ${MOBILE_SDK_WRITER_HOST};
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-By smartlook-relay-proxy;
+        
+        proxy_pass_header Server;
+
+        proxy_redirect default;
+    }
+
+    location / {
+        proxy_pass https://${WEB_SDK_HOST}/;
+
+        proxy_set_header Host ${WEB_SDK_HOST};
+        proxy_set_header X-Forwarded-Host ${WEB_SDK_HOST};
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-By smartlook-relay-proxy;
+        
+        proxy_pass_header Server;
+
+        proxy_redirect default;
+    }
+}

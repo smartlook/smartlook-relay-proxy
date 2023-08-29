@@ -1,19 +1,17 @@
 PROJECT_NAME := smartlook-relay-proxy
+COMMIT_SHA := dev,$(shell git rev-parse HEAD)
 
 NPM_BIN := ./node_modules/.bin
 
 TSC := $(NPM_BIN)/tsc
-TSX := $(NPM_BIN)/tsx
 VITEST := $(NPM_BIN)/vitest
 PRETTIER := $(NPM_BIN)/prettier
 ESLINT := $(NPM_BIN)/eslint
-PINO_PRETTY := $(NPM_BIN)/pino-pretty
-HUSKY := $(NPM_BIN)/husky
 
-COMMIT_SHA := dev,$(shell git rev-parse HEAD)
+ESLINT_CACHE := ./cache/eslint
+PRETTIER_CACHE := ./cache/prettier
 
-ESLINT_CACHE := ./cache/.eslintcache
-PRETTIER_CACHE := ./cache/.prettiercache
+COMPOSE_TEST_CMD := docker compose up -d --build --force-recreate --remove-orphans && sleep 5
 
 .PHONY: help
 ## Display this help
@@ -22,48 +20,31 @@ help:
 
 ##@ Development
 
-.PHONY: install
-install: ## install all dependencies
-	pnpm install
-	$(HUSKY) install
-
 .PHONY: dev
 dev: ## run TS (watch mode)
-	COMMIT_SHA="$(COMMIT_SHA)" $(TSX) watch --clear-screen=false -r dotenv/config ./src/main.ts | $(PINO_PRETTY)
-
-.PHONY: run-js
-run-js: ## run built JS
-	node -r dotenv/config ./build/src/main.js
+	docker compose up
 
 ##@ Build
 
+.PHONY: build-ts
+build-ts: ## build TS
+	$(TSC) --noEmit
+
 .PHONY: build
-build: ## build TS
-	rm -rf ./build
-	$(TSC) --build --force
-
-.PHONY: build-prod
-build-prod: ## build TS (for production)
-	rm -rf ./build
-	$(TSC) --project ./tsconfig.prod.json
-
-.PHONY: build-image
-build-image: ## build Docker image (args=<build args>, tag=<string>)
+build: ## build Docker image (args=<build args>, tag=<string>)
 	docker build $(or $(args), --build-arg COMMIT_SHA="$(COMMIT_SHA)") -t $(or $(tag), $(PROJECT_NAME)) . -f ./Dockerfile
 
 ##@ Test
 
 .PHONY: test
 test: ## run tests
+	$(COMPOSE_TEST_CMD)
 	$(VITEST) run
 
 .PHONY: test-watch
 test-watch: ## run tests (watch mode)
+	$(COMPOSE_TEST_CMD)
 	$(VITEST) watch
-
-.PHONY: test-coverage
-test-coverage: ## run tests (with coverage)
-	$(VITEST) run --coverage
 
 ##@ Code quality
 
@@ -85,11 +66,10 @@ install-ci: ## install all dependencies (CI)
 	pnpm install --frozen-lockfile
 
 .PHONY: build-ci
-build-ci: ## build TS (CI)
-	$(TSC) --build --force
+build-ci: build-ts ## build TS (CI)
 
 .PHONY: test-ci
-test-ci: test-coverage ## run tests (CI)
+test-ci: test ## run tests (CI)
 
 .PHONY: prettier-ci
 prettier-ci: ## run Prettier (CI)
