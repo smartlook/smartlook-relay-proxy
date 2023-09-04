@@ -7,7 +7,7 @@
     "type": "module",
     "exports": "./build/src/main.js",
     "engines": {
-        "node": ">=18",
+        "node": ">=20",
         "pnpm": ">=8"
     },
     "devDependencies": {
@@ -15,9 +15,9 @@
         "@commitlint/config-conventional": "17.7.0",
         "@types/eslint": "8.44.2",
         "@types/lint-staged": "13.2.0",
-        "@types/node": "20.5.7",
-        "@typescript-eslint/eslint-plugin": "6.4.1",
-        "@typescript-eslint/parser": "6.4.1",
+        "@types/node": "20.5.9",
+        "@typescript-eslint/eslint-plugin": "6.5.0",
+        "@typescript-eslint/parser": "6.5.0",
         "eslint": "8.48.0",
         "eslint-config-prettier": "9.0.0",
         "eslint-import-resolver-typescript": "3.6.0",
@@ -25,7 +25,7 @@
         "eslint-plugin-prettier": "5.0.0",
         "husky": "8.0.3",
         "lint-staged": "14.0.1",
-        "prettier": "3.0.2",
+        "prettier": "3.0.3",
         "typescript": "5.2.2",
         "undici": "5.23.0",
         "vitest": "0.34.3"
