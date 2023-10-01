@@ -4,7 +4,7 @@ map $status $loggable {
 }
 
 server {
-    listen [::]:${PROXY_PORT};
+    listen ${PROXY_PORT};
 
     server_tokens off;
     client_max_body_size ${CLIENT_MAX_BODY_SIZE};
