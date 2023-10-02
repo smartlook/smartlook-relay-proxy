@@ -3,6 +3,7 @@ FROM nginx:1-alpine
 ARG COMMIT_SHA="unknown"
 
 COPY ./nginx/templates /etc/nginx/templates
+COPY --chmod=0555 ./nginx/entrypoint.sh /docker-entrypoint.d/40-smartlook-relay-proxy.sh
 
 ENV COMMIT_SHA=${COMMIT_SHA}
 ENV PROXY_PORT=8000
