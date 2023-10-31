@@ -20,9 +20,13 @@ help:
 
 ##@ Development
 
+.PHONY: install
+install: ## install dep
+	pnpm install
+
 .PHONY: dev
 dev: ## run TS (watch mode)
-	docker compose up
+	docker compose up --build
 
 ##@ Build
 

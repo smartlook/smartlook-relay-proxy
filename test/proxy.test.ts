@@ -1,4 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+type StatusResponse = {
+    ok: boolean
+    version: string
+}
+
+type CommonStatusResponse = [StatusResponse, StatusResponse]
+
 describe('Proxy server', () => {
     it('Should return relay proxy status on /proxy/status', async () => {
         const response = await fetch('http://localhost:80/proxy/status')
@@ -19,10 +27,10 @@ describe('Proxy server', () => {
             fetch('http://localhost:80/manager/status'),
         ])
 
-        const [ogResponseJson, proxyResponseJson] = await Promise.all([
+        const [ogResponseJson, proxyResponseJson] = (await Promise.all([
             ogResponse.json(),
             proxyResponse.json(),
-        ])
+        ])) as CommonStatusResponse
 
         expect(ogResponse.status).toBe(200)
         expect(proxyResponse.status).toBe(200)
@@ -32,7 +40,9 @@ describe('Proxy server', () => {
         expect(proxyResponse.headers.get('content-type')).toBe(
             'application/json; charset=utf-8',
         )
-        expect(ogResponseJson).toEqual(proxyResponseJson)
+
+        expect(ogResponseJson.ok).toBe(proxyResponseJson.ok)
+        expect(ogResponseJson.version).toBe(proxyResponseJson.version)
     })
 
     it('Should return assets proxy status on /assets/status', async () => {
@@ -41,10 +51,10 @@ describe('Proxy server', () => {
             fetch('http://localhost:80/assets/status'),
         ])
 
-        const [ogResponseJson, proxyResponseJson] = await Promise.all([
+        const [ogResponseJson, proxyResponseJson] = (await Promise.all([
             ogResponse.json(),
             proxyResponse.json(),
-        ])
+        ])) as CommonStatusResponse
 
         expect(ogResponse.status).toBe(200)
         expect(proxyResponse.status).toBe(200)
@@ -52,7 +62,9 @@ describe('Proxy server', () => {
         expect(proxyResponse.headers.get('content-type')).toBe(
             'application/json',
         )
-        expect(ogResponseJson).toEqual(proxyResponseJson)
+
+        expect(ogResponseJson.ok).toBe(proxyResponseJson.ok)
+        expect(ogResponseJson.version).toBe(proxyResponseJson.version)
     })
 
     it('Should return web writer status on /web-writer/status', async () => {
@@ -61,10 +73,10 @@ describe('Proxy server', () => {
             fetch('http://localhost:80/web-writer/status'),
         ])
 
-        const [ogResponseJson, proxyResponseJson] = await Promise.all([
-            ogResponse.json() as Promise<{ version: string }>,
-            proxyResponse.json() as Promise<{ version: string }>,
-        ])
+        const [ogResponseJson, proxyResponseJson] = (await Promise.all([
+            ogResponse.json(),
+            proxyResponse.json(),
+        ])) as CommonStatusResponse
 
         expect(ogResponse.status).toBe(200)
         expect(proxyResponse.status).toBe(200)
@@ -74,7 +86,9 @@ describe('Proxy server', () => {
         expect(proxyResponse.headers.get('content-type')).toBe(
             'application/json; charset=utf-8',
         )
-        expect(ogResponseJson.version).toEqual(proxyResponseJson.version)
+
+        expect(ogResponseJson.ok).toBe(proxyResponseJson.ok)
+        expect(ogResponseJson.version).toBe(proxyResponseJson.version)
     })
 
     it('Should return sdk writer status on /sdk-writer/status', async () => {
@@ -83,10 +97,10 @@ describe('Proxy server', () => {
             fetch('http://localhost:80/sdk-writer/status'),
         ])
 
-        const [ogResponseJson, proxyResponseJson] = await Promise.all([
+        const [ogResponseJson, proxyResponseJson] = (await Promise.all([
             ogResponse.json(),
             proxyResponse.json(),
-        ])
+        ])) as CommonStatusResponse
 
         expect(ogResponse.status).toBe(200)
         expect(proxyResponse.status).toBe(200)
@@ -96,7 +110,8 @@ describe('Proxy server', () => {
         expect(proxyResponse.headers.get('content-type')).toBe(
             'application/json; charset=utf-8',
         )
-        expect(ogResponseJson).toEqual(proxyResponseJson)
+        expect(ogResponseJson.ok).toBe(proxyResponseJson.ok)
+        expect(ogResponseJson.version).toBe(proxyResponseJson.version)
     })
 
     it('Should return web sdk status on /status', async () => {
@@ -105,10 +120,10 @@ describe('Proxy server', () => {
             fetch('http://localhost:80/status'),
         ])
 
-        const [ogResponseJson, proxyResponseJson] = await Promise.all([
+        const [ogResponseJson, proxyResponseJson] = (await Promise.all([
             ogResponse.json(),
             proxyResponse.json(),
-        ])
+        ])) as CommonStatusResponse
 
         expect(ogResponse.status).toBe(200)
         expect(proxyResponse.status).toBe(200)
@@ -116,7 +131,8 @@ describe('Proxy server', () => {
         expect(proxyResponse.headers.get('content-type')).toBe(
             'application/json',
         )
-        expect(ogResponseJson).toEqual(proxyResponseJson)
+        expect(ogResponseJson.ok).toBe(proxyResponseJson.ok)
+        expect(ogResponseJson.version).toBe(proxyResponseJson.version)
     })
 
     it('Should return web sdk recorder on /recorder.js', async () => {

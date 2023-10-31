@@ -1,8 +1,8 @@
-version: '3'
-
 services:
     nginx:
-        image: nginx:1-alpine
+        build:
+            context: .
+            dockerfile: Dockerfile
         container_name: nginx
         restart: unless-stopped
         ports:
@@ -10,6 +10,8 @@ services:
         environment:
             COMMIT_SHA: dev
             PROXY_PORT: 8000
+            DNS_RESOLVER: '127.0.0.11 valid=0s'
+            LISTEN_IPV6: 'true'
             CLIENT_MAX_BODY_SIZE: 20m
             ERROR_LOG_LEVEL: error
             WEB_SDK_HOST: web-sdk.smartlook.com
