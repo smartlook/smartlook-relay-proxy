@@ -22,7 +22,7 @@ Images are available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-pr
 ```bash
 docker run --name="smartlook-relay-proxy" \
   -p <port>:8000 \  # runs on port 8000 by default
-  smartlook/relay-proxy:latest
+  smartlook/relay-proxy:6
 ```
 
 3. Create a subdomain and point it to the container. It is best to use a subdomain of your website's domain.
