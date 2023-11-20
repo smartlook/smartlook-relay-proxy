@@ -4,7 +4,7 @@ map $status $loggable {
 }
 
 server {
-    listen ${PROXY_PORT};
+    listen ${PROXY_PORT} proxy_protocol;
     
     proxy_cache off;
 
