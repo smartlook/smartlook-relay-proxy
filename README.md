@@ -17,7 +17,7 @@ Images are available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-pr
 1. Get the Smartlook relay proxy image. Images are available on [Docker Hub](https://hub.docker.com/r/smartlook/relay-proxy) and [GitHub Packages](https://github.com/smartlook/smartlook-relay-proxy/pkgs/container/relay-proxy).
 
 2. Run the image and configure environment variables according to your needs.  
-   **All variables are optional, default values are listed in the table below**.
+   **Default values are listed in the table below**.
 
 ```bash
 docker run --name="smartlook-relay-proxy" \
@@ -108,6 +108,9 @@ To set up for other regions:
 **By default, all data is stored in the EU**. However, if your Smartlook organization is set up to store data in US (you must contact Smartlook support to set it up), you need to set the environment variables as described in region-specific setup [above](#regional-setup).
 
 ## Development
+
+This NGINX configuration can be used to develop your own NGINX.
+Make sure that the headers are set (**Host**, **X-Forwarded-By** and **X-Forwarded-Host**). Otherwise the video stream will not work.
 
 ```bash
 # See all available commands
