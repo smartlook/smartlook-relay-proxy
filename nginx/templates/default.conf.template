@@ -4,7 +4,7 @@ map $status $loggable {
 }
 
 server {
-    listen ${PROXY_PORT};
+    listen ${PROXY_PORT} proxy_protocol;
     
     proxy_cache off;
     proxy_ssl_server_name on;
@@ -37,8 +37,6 @@ server {
 
         proxy_set_header Host $manager_host;
         proxy_set_header X-Forwarded-Host $manager_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-By smartlook-relay-proxy;
     }
@@ -49,8 +47,6 @@ server {
 
         proxy_set_header Host $assets_proxy_host;
         proxy_set_header X-Forwarded-Host $assets_proxy_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-By smartlook-relay-proxy;
     }
@@ -61,8 +57,6 @@ server {
 
         proxy_set_header Host $web_sdk_writer_host;
         proxy_set_header X-Forwarded-Host $web_sdk_writer_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-By smartlook-relay-proxy;
     }
@@ -73,8 +67,6 @@ server {
 
         proxy_set_header Host $mobile_sdk_writer_host;
         proxy_set_header X-Forwarded-Host $mobile_sdk_writer_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-By smartlook-relay-proxy;
     }
@@ -84,8 +76,6 @@ server {
 
         proxy_set_header Host $web_sdk_host;
         proxy_set_header X-Forwarded-Host $web_sdk_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-By smartlook-relay-proxy;
     }
